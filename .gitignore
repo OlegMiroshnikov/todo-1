@@ -7,6 +7,10 @@
 # Only exists if Bazel was run
 /bazel-out
 
+#templates
+/templates
+/browserslist
+
 # dependencies
 /node_modules
 
@@ -44,3 +48,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
