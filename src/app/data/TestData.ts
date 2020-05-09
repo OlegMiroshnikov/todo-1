@@ -28,7 +28,8 @@ export class TestData {
     {
       id: 2,
       title: 'Убрать дом',
-      completed: false
+      completed: false,
+      category: TestData.categories[1]
     }
   ];
 
