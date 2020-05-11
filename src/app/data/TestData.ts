@@ -20,7 +20,7 @@ export class TestData {
     {
       id: 1,
       title: 'Залить полный бак',
-      completed: false,
+      completed: true,
       priority: TestData.priorities[1],
       category: TestData.categories[0],
       date: new Date('2020-05-08')
