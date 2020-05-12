@@ -27,10 +27,20 @@ export class TestData {
     },
     {
       id: 2,
+      title: 'Изучить Angular v.9',
+      completed: false,
+      priority: TestData.priorities[2],
+      category: TestData.categories[1]
+    },
+    {
+      id: 3,
       title: 'Убрать дом',
+      priority: TestData.priorities[1],
       completed: false,
       category: TestData.categories[1]
     }
+
+
   ];
 
 }

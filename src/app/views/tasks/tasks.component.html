@@ -2,37 +2,95 @@
   <div class="card-header card-header-warning">
     <h4 class="card-title">Список задач</h4>
   </div>
-  <div class="card-body table-responsive">
-    <table class="table table-hover">
-      <thead class="text-warning">
-      <th>#</th>
-      <th>Название</th>
-      <th>Категория</th>
-      <th>Приоритет</th>
-      <th>Дата</th>
-      <th>Статус</th>
-      </thead>
-      <tbody>
-      <tr *ngFor="let task of tasks; let i=index" [class.completed]="task.completed">
-        <td>{{i + 1}}</td>
-        <td>{{task.title}}</td>
-        <td [class.novalue]="task.category == null">{{task.category != null ? task.category.title : "no category"}}</td>
-        <td [class.novalue]="task.priority == null">{{task.priority != null ? task.priority.title : "no priority"}}</td>
-        <td [class.novalue]="task.date == null">{{task.date != null ? (task.date |date: 'medium') : "no date"}}</td>
-        <td>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input (click)="toggleTaskCompleted(task)" [checked]="task.completed" class="form-check-input"
-                     type="checkbox"
-                     value="">
-              <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-            </label>
-          </div>
-        </td>
-      </tr>
-      </tbody>
+  <div *ngIf="tasks.length > 0" class="card-body table-responsive">
+    <table [dataSource]="dataSource" mat-table matSort>
+
+      <!-- Color Column-->
+      <ng-container matColumnDef="color">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let task" [style.background-color]="getPriorityColor(task)" class="col-сolor"
+            mat-cell></td>
+      </ng-container>
+
+      <!-- Order Column -->
+      <ng-container matColumnDef="id">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let i=index" class="col-id" mat-cell> {{i + 1}} </td>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header> Название</th>
+        <td *matCellDef="let task" [class.completed]="task.completed" class="col-title" mat-cell> {{task.title}} </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header> Срок</th>
+        <td *matCellDef="let task" [ngClass]="{completed: task.completed, novalue: task.date == null}" class="col-date"
+            mat-cell>
+          {{task.date != null ? (task.date | date:"medium") : "no date"}} </td>
+      </ng-container>
+
+      <!-- Priority Column -->
+      <ng-container matColumnDef="priority">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header> Приоритет</th>
+        <td *matCellDef="let task" [ngClass]="{completed: task.completed, novalue: task.priority == null}"
+            class="col-priority"
+            mat-cell>
+          {{task.priority ? task.priority.title : "без приоритета"}}</td>
+      </ng-container>
+
+      <!-- Category Column -->
+      <ng-container matColumnDef="category">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header> Категория</th>
+        <td *matCellDef="let task" [ngClass]="{completed: task.completed, novalue: task.category == null}"
+            class="col-category"
+            mat-cell>
+          {{task.category ? task.category.title : "без категории"}}</td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
     </table>
+
+    <!--    Pagination-->
+    <mat-paginator [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
   </div>
-</div>
+  <div *ngIf="tasks.length==0">
+    <p class="not-found">Ничего не найдено</p>
+  </div>
+
+  <!--    <table class="table table-hover">-->
+  <!--      <thead class="text-warning">-->
+  <!--      <th>#</th>-->
+  <!--      <th>Название</th>-->
+  <!--      <th>Категория</th>-->
+  <!--      <th>Приоритет</th>-->
+  <!--      <th>Дата</th>-->
+  <!--      <th>Статус</th>-->
+  <!--      </thead>-->
+  <!--      <tbody>-->
+  <!--      <tr *ngFor="let task of tasks; let i=index" [class.completed]="task.completed">-->
+  <!--        <td>{{i + 1}}</td>-->
+  <!--        <td>{{task.title}}</td>-->
+  <!--        <td [class.novalue]="task.category == null">{{task.category != null ? task.category.title : "no category"}}</td>-->
+  <!--        <td [class.novalue]="task.priority == null">{{task.priority != null ? task.priority.title : "no priority"}}</td>-->
+  <!--        <td [class.novalue]="task.date == null">{{task.date != null ? (task.date |date: 'medium') : "no date"}}</td>-->
+  <!--        <td>-->
+  <!--          <div class="form-check">-->
+  <!--            <label class="form-check-label">-->
+  <!--              <input (click)="toggleTaskCompleted(task)" [checked]="task.completed" class="form-check-input"-->
+  <!--                     type="checkbox"-->
+  <!--                     value="">-->
+  <!--              <span class="form-check-sign">-->
+  <!--                                    <span class="check"></span>-->
+  <!--                                  </span>-->
+  <!--            </label>-->
+  <!--          </div>-->
+  <!--        </td>-->
+  <!--      </tr>-->
+  <!--      </tbody>-->
+  <!--    </table>-->
+  <!--  </div>-->
+
