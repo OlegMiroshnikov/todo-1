@@ -1,8 +1,9 @@
 import {TaskDAO} from '../interface/TaskDAO';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Task} from 'src/app/model/Task';
 import {Priority} from 'src/app/model/Priority';
 import {Category} from '../../../model/Category';
+import {TestData} from '../../TestData';
 
 export class TaskDAOArray implements TaskDAO {
 
@@ -19,7 +20,7 @@ export class TaskDAOArray implements TaskDAO {
   }
 
   getAll(): Observable<Task[]> {
-    return undefined;
+    return of(TestData.tasks);
   }
 
   search(category: Category, searchStrin: string, status: boolean, priority: Priority): Observable<Task[]> {
