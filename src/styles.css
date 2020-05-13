@@ -9,3 +9,8 @@
   color: rgba(74, 74, 74, 0.92);
   text-align: center;
 }
+
+.pointer {
+  cursor: pointer;
+}
+

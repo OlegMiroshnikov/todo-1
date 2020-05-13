@@ -12,14 +12,34 @@ export class AppComponent {
   title = 'Todo';
   tasks: Task[];
   categories: Category[];
+  private selectedCategory: Category;
+  private selectedTask: Task;
 
   constructor(private dataHandler: DataHandlerService) {
   }
 
   ngOnInit(): void {
-    this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
+    // this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
+    this.onSelectCategory(null);
   }
 
+  private onSelectCategory(category: Category) {
+    this.selectedCategory = category;
+    this.dataHandler
+      .searchTasks(this.selectedCategory, null, null, null)
+      .subscribe(tasks => {
+        this.tasks = tasks;
+      });
+  }
+
+  private onSelectTask(task: Task) {
+    this.selectedTask = task;
+
+  }
+
+  private onUpdateTask(task: Task) {
+    console.log(task);
+  }
 }
 
