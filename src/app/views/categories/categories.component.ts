@@ -20,7 +20,7 @@ export class CategoriesComponent implements OnInit {
     // this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
   }
 
-  private showTasksByCategory(category: Category) {
+  showTasksByCategory(category: Category): void {
     // this.selectedCategory = category;
     // this.dataHandler.fillTasksByCategory(category);
     if (this.selectedCategory === category) {

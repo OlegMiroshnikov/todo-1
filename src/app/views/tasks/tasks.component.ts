@@ -4,6 +4,8 @@ import {Task} from '../../model/Task';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import {MatDialog} from '@angular/material/dialog';
+import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 
 @Component({
   selector: 'app-tasks',
@@ -15,7 +17,6 @@ export class TasksComponent implements OnInit {
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
   dataSource: MatTableDataSource<Task>;
   tasks: Task[];
-  @Output() updateTask = new EventEmitter<Task>();
 
   @Input('tasks')
   private set setTasks(tasks: Task[]) {
@@ -23,10 +24,13 @@ export class TasksComponent implements OnInit {
     this.fillTable();
   }
 
+  @Output() updateTask = new EventEmitter<Task>();
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort: MatSort;
 
-  constructor(private dataHandler: DataHandlerService) {
+  constructor(
+    private dataHandler: DataHandlerService,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -46,7 +50,7 @@ export class TasksComponent implements OnInit {
     return '#fff';  // TODO put colors on a separate list
   }
 
-  toggleTaskCompleted(task: Task) {
+  toggleTaskCompleted(task: Task): void {
     task.completed = !task.completed;
   }
 
@@ -54,7 +58,16 @@ export class TasksComponent implements OnInit {
   //   this.addTableObjects();
   // }
 
-  private fillTable() {
+  // диалоговое редактирования для добавления задачи
+  openEditTaskDialog(task: Task): void {
+    // открытие диалогового окна
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Редактирование задачи'], autoFocus: false});
+    dialogRef.afterClosed().subscribe(result => {
+      // обработка результатов
+    });
+  }
+
+  private fillTable(): void {
     if (!this.dataSource) {
       return;
     }
@@ -79,14 +92,9 @@ export class TasksComponent implements OnInit {
     };
   }
 
-  private addTableObjects() {
+  private addTableObjects(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
-
-  private onClickTask(task: Task) {
-    this.updateTask.emit(task);
-  }
-
 
 }
