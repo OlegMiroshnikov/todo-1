@@ -34,12 +34,24 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.dataHandler.tasksSubject.subscribe(tasks => this.tasks = tasks);
-    // this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
     this.dataSource = new MatTableDataSource();
     this.fillTable();
   }
 
+  // диалоговое редактирование для добавления задачи
+  openEditTaskDialog(task: Task): void {
+    // открытие диалогового окна
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Редактирование задачи'], autoFocus: false});
+    dialogRef.afterClosed().subscribe(result => {
+      // обработка результатов
+      if (result as Task) { // если нажали ОК и есть результат
+        this.updateTask.emit(task);
+        return;
+      }
+    });
+  }
+
+  // в зависимости от статуса задачи - вернуть цвет названия
   getPriorityColor(task: Task): string {
     if (task.completed) {
       return '#F8F9FA'; // TODO put colors on a separate list
@@ -54,26 +66,16 @@ export class TasksComponent implements OnInit {
     task.completed = !task.completed;
   }
 
-  // ngAfterViewInit(): void {
-  //   this.addTableObjects();
-  // }
-
-  // диалоговое редактирования для добавления задачи
-  openEditTaskDialog(task: Task): void {
-    // открытие диалогового окна
-    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Редактирование задачи'], autoFocus: false});
-    dialogRef.afterClosed().subscribe(result => {
-      // обработка результатов
-    });
-  }
-
   private fillTable(): void {
     if (!this.dataSource) {
       return;
     }
-    this.dataSource.data = this.tasks;
+    this.dataSource.data = this.tasks; // обновить источник данных (т.к. данные массива tasks обновились)
     this.addTableObjects();
-    // @ts-ignore
+
+    // когда получаем новые данные..
+    // чтобы можно было сортировать по столбцам "категория" и "приоритет", т.к. там не примитивные типы, а объекты
+    // @ts-ignore - показывает ошибку для типа даты, но так работает, т.к. можно возвращать любой тип
     this.dataSource.sortingDataAccessor = (task, colName) => {
       switch (colName) {
         case 'priority': {
@@ -93,8 +95,8 @@ export class TasksComponent implements OnInit {
   }
 
   private addTableObjects(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort; // компонент для сортировки данных (если необходимо)
+    this.dataSource.paginator = this.paginator; // обновить компонент постраничности (кол-во записей, страниц)
   }
 
 }

@@ -6,27 +6,21 @@ import {Category} from '../model/Category';
 import {CategoryDAOArray} from '../data/dao/impl/CategoryDAOArray';
 import {Priority} from '../model/Priority';
 
+// класс реализовывает методы, которые нужны frontend'у, т.е. для удобной работы представлений
+// напоминает паттер Фасад (Facade) - выдает только то, что нужно для функционала
+// сервис не реализовывает напрямую интерфейсы DAO, а использует их реализации (в данном случае массивы)
+// может использовать не все методы DAO, а только нужные
+
 @Injectable({
   providedIn: 'root'
 })
 export class DataHandlerService {
 
-  // tasksSubject = new BehaviorSubject<Task[]>(TestData.tasks);
-  // categoriesSubject = new BehaviorSubject<Category[]>(TestData.categories);
   private taskDAOArray = new TaskDAOArray();
   private categoryDAOArray = new CategoryDAOArray();
 
   constructor() {
   }
-
-  // fillTasks() {
-  //   this.tasksSubject.next(TestData.tasks);
-  // }
-  //
-  // fillTasksByCategory(category: Category) {
-  //   const tasks = TestData.tasks.filter(task => task.category === category);
-  //   this.tasksSubject.next(tasks);
-  // }
 
   getAllTasks(): Observable<Task[]> {
     return this.taskDAOArray.getAll();
@@ -36,6 +30,11 @@ export class DataHandlerService {
     return this.categoryDAOArray.getAll();
   };
 
+  updateTask(task: Task): Observable<Task> {
+    return this.taskDAOArray.update(task);
+  }
+
+  // поиск задач по параметрам
   searchTasks(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
     return this.taskDAOArray.search(category, searchText, status, priority);
   }

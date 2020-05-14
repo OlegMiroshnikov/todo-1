@@ -45,16 +45,18 @@ export class TaskDAOArray implements TaskDAO {
     return of(this.searchTodos(category, searchText, status, priority));
   }
 
-  update(T): Observable<Task> {
-    return undefined;
-  }
-
   private searchTodos(category: Category, searchText: string, status: boolean, priority: Priority): Task[] {
     let allTasks = TestData.tasks;
     if (category != null) {
       allTasks = allTasks.filter(task => task.category === category);
     }
     return allTasks; // отфильтрованный массив
+  }
+
+  update(task: Task): Observable<Task> {
+    const taskTmp = TestData.tasks.find(t => t.id === task.id); // обновляем по id
+    TestData.tasks.splice(TestData.tasks.indexOf(taskTmp), 1, task);
+    return of(task);
   }
 
 }

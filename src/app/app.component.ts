@@ -13,17 +13,16 @@ export class AppComponent {
   tasks: Task[];
   categories: Category[];
   private selectedCategory: Category;
-  private selectedTask: Task;
 
   constructor(private dataHandler: DataHandlerService) {
   }
 
   ngOnInit(): void {
-    // this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
     this.onSelectCategory(null);
   }
 
+  // выбор категории
   private onSelectCategory(category: Category) {
     this.selectedCategory = category;
     this.dataHandler
@@ -33,13 +32,20 @@ export class AppComponent {
       });
   }
 
-  private onSelectTask(task: Task) {
-    this.selectedTask = task;
-
-  }
-
+  // обновление задачи
   private onUpdateTask(task: Task) {
-    console.log(task);
+    this.dataHandler.updateTask(task).subscribe(() => {
+      this.dataHandler.searchTasks(
+        this.selectedCategory,
+        null,
+        null,
+        null
+      ).subscribe(tasks => {
+        this.tasks = tasks;
+      });
+    });
+
   }
+
 }
 
