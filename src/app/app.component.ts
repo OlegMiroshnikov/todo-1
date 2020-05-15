@@ -12,7 +12,7 @@ export class AppComponent {
   title = 'Todo';
   tasks: Task[];
   categories: Category[];
-  private selectedCategory: Category;
+  private selectedCategory: Category = null;
 
   constructor(private dataHandler: DataHandlerService) {
   }
