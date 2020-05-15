@@ -43,9 +43,10 @@ import {ConfirmDialogComponent} from './dialog/confirm-dialog/confirm-dialog.com
     MatSelectModule
   ],
   providers: [],
-  entryComponents: [
-    EditTaskDialogComponent
-  ],
+  // entryComponents: [
+  //   EditTaskDialogComponent,
+  //   ConfirmDialogComponent
+  // ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -25,6 +25,8 @@ export class TasksComponent implements OnInit {
   }
 
   @Output() updateTask = new EventEmitter<Task>();
+  @Output() deleteTask = new EventEmitter<Task>();
+
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort: MatSort;
 
@@ -36,19 +38,6 @@ export class TasksComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource();
     this.fillTable();
-  }
-
-  // диалоговое редактирование для добавления задачи
-  openEditTaskDialog(task: Task): void {
-    // открытие диалогового окна
-    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Редактирование задачи'], autoFocus: false});
-    dialogRef.afterClosed().subscribe(result => {
-      // обработка результатов
-      if (result as Task) { // если нажали ОК и есть результат
-        this.updateTask.emit(task);
-        return;
-      }
-    });
   }
 
   // в зависимости от статуса задачи - вернуть цвет названия
@@ -97,6 +86,39 @@ export class TasksComponent implements OnInit {
   private addTableObjects(): void {
     this.dataSource.sort = this.sort; // компонент для сортировки данных (если необходимо)
     this.dataSource.paginator = this.paginator; // обновить компонент постраничности (кол-во записей, страниц)
+  }
+
+  // диалоговое окно редактирования задачи
+  openEditTaskDialog(task: Task): void {
+    // открытие диалогового окна
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      data:
+        [task, 'Редактирование задачи'], autoFocus: false
+    });
+    // обработка результатов
+    dialogRef.afterClosed().subscribe(result => {
+      // завершить задачу
+      if (result === 'complete') {
+        task.completed = true; // ставим статус задачи как выполненная
+        this.updateTask.emit(task);
+      }
+      // активировать задачу
+      if (result === 'activate') {
+        task.completed = false; // возвращаем статус задачи как невыполненная
+        this.updateTask.emit(task);
+        return;
+      }
+      // если подтвердили удаление задачи
+      if (result === 'delete') {
+        this.deleteTask.emit(task);
+        return;
+      }
+      // если нажали ОК и есть результат
+      if (result as Task) {
+        this.updateTask.emit(task);
+        return;
+      }
+    });
   }
 
 }

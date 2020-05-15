@@ -47,5 +47,19 @@ export class AppComponent {
 
   }
 
+  // удаление задачи
+  private onDeleteTask(task: Task) {
+    this.dataHandler.deleteTask(task.id).subscribe(() => {
+      this.dataHandler.searchTasks(
+        this.selectedCategory,
+        null,
+        null,
+        null
+      ).subscribe(tasks => {
+        this.tasks = tasks;
+      });
+    });
+  }
+
 }
 
