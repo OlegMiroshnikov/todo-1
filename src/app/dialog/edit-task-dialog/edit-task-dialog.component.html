@@ -39,6 +39,24 @@
     </mat-select>
   </mat-form-field>
 
+  <!--    календарь - срок выполнения-->
+  <mat-form-field>
+    <input #inputDate (click)="picker.open()" [(ngModel)]="tmpDate"
+           [matDatepicker]="picker"
+           matInput
+           placeholder="Укажите срок выполнения"
+           readonly="true">
+    <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+    <!-- иконка календаря (для открытия календаря) -->
+    <mat-datepicker #picker></mat-datepicker> <!-- компонент календаря (открывается по нажатию)-->
+    <!--кнопка очистки даты -->
+    <button (click)="tmpDate = null" *ngIf="inputDate.value.trim().length > 0" aria-label="Clear" class="size25"
+            mat-button
+            mat-icon-button matSuffix>
+      <mat-icon>clear</mat-icon>
+    </button>
+  </mat-form-field>
+
 </mat-dialog-content>
 
 <!--  кнопки возможных действий-->

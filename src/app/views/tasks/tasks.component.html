@@ -35,7 +35,8 @@
         <td *matCellDef="let task" [ngClass]="{completed: task.completed, novalue: task.date == null}"
             class="col-date"
             mat-cell>
-          {{task.date != null ? (task.date | date:"medium") : "no date"}} </td>
+          {{task.date | taskDate}}
+        </td>
       </ng-container>
 
       <!-- Priority Column -->
