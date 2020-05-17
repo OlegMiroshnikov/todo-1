@@ -21,7 +21,8 @@ export class CategoriesComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog // внедряем MatDialog, чтобы работать с диалоговыми окнами
+  ) {
   }
 
   ngOnInit(): void {

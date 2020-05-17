@@ -1,5 +1,4 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Category} from '../../model/Category';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 
@@ -10,7 +9,6 @@ import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component
 })
 export class EditCategoryDialogComponent implements OnInit {
   private dialogTitle: string; // заголовок окна
-  private category: Category;
   private categoryTitle: string;
 
   constructor(
