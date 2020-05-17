@@ -9,14 +9,17 @@
       <ng-container matColumnDef="color">
         <th *matHeaderCellDef mat-header-cell></th>
         <td *matCellDef="let task" [style.background-color]="getPriorityColor(task)"
-            class="col-сolor"
-            mat-cell></td>
+            class="col-сolor" mat-cell>
+        </td>
       </ng-container>
 
       <!-- Order Column -->
       <ng-container matColumnDef="id">
         <th *matHeaderCellDef mat-header-cell></th>
-        <td *matCellDef="let i=index" class="col-id" mat-cell> {{i + 1}} </td>
+        <td *matCellDef="let i=index"
+            class="col-id" mat-cell>
+          {{i + 1}}
+        </td>
       </ng-container>
 
       <!-- Title Column -->
@@ -24,17 +27,16 @@
         <th *matHeaderCellDef mat-header-cell mat-sort-header> Название</th>
         <td (click)="openEditTaskDialog(task)" *matCellDef="let task"
             [class.completed]="task.completed"
-            class="col-title pointer"
-            mat-cell
-        > {{task.title}} </td>
+            class="col-title pointer" mat-cell>
+          {{task.title}}
+        </td>
       </ng-container>
 
       <!-- Date Column -->
       <ng-container matColumnDef="date">
         <th *matHeaderCellDef mat-header-cell mat-sort-header> Срок</th>
         <td *matCellDef="let task" [ngClass]="{completed: task.completed, novalue: task.date == null}"
-            class="col-date"
-            mat-cell>
+            class="col-date" mat-cell>
           {{task.date | taskDate}}
         </td>
       </ng-container>
@@ -43,21 +45,49 @@
       <ng-container matColumnDef="priority">
         <th *matHeaderCellDef mat-header-cell mat-sort-header> Приоритет</th>
         <td *matCellDef="let task" [ngClass]="{completed: task.completed, novalue: task.priority == null}"
-            class="col-priority"
-            mat-cell>
-          {{task.priority ? task.priority.title : "без приоритета"}}</td>
+            class="col-priority" mat-cell>
+          {{task.priority ? task.priority.title : "без приоритета"}}
+        </td>
       </ng-container>
 
       <!-- Category Column -->
       <ng-container matColumnDef="category">
         <th *matHeaderCellDef mat-header-cell mat-sort-header> Категория</th>
-        <td *matCellDef="let task" [ngClass]="{completed: task.completed, novalue: task.category == null}"
-            class="col-category"
-            mat-cell>
+        <td (click)="!task.completed && task.category && onSelectCategory(task.category)"
+            *matCellDef="let task"
+            [ngClass]="{completed: task.completed, novalue: task.category == null, link: '!task.completed && task.category'}"
+            class="col-category" mat-cell>
           {{task.category ? task.category.title : "без категории"}}</td>
       </ng-container>
 
+      <!--доступные действия над задачей-->
+      <ng-container matColumnDef="operations">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let task" [class.completed]="task.completed" class="col-operations" mat-cell>
+          <button (click)="openDeleteDialog(task)" class="delete-icon" mat-icon-button>
+            <mat-icon aria-hidden="false">delete</mat-icon>
+          </button>
+          <button (click)="openEditTaskDialog(task)" class="edit-icon" mat-icon-button>
+            <mat-icon aria-hidden="false">edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- галочка для выполнения/активации задачи-->
+      <ng-container matColumnDef="select">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let task" class="col-select text-right" mat-cell>
+          <mat-checkbox
+            (change)="$event ? onToggleStatus(task) : null"
+            (click)="$event.stopPropagation()"
+            [checked]="task.completed">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!--  заголовок таблицы-->
       <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <!--  строки таблицы - набор строк из тегов td (порядок указывается в переменной displayedColumns) -->
       <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
     </table>
 

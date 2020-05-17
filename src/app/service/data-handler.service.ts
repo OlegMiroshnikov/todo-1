@@ -40,13 +40,20 @@ export class DataHandlerService {
     return this.taskDAOArray.update(task);
   }
 
+  deleteTask(id: number): Observable<Task> {
+    return this.taskDAOArray.delete(id);
+  }
+
   // поиск задач по параметрам
   searchTasks(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
     return this.taskDAOArray.search(category, searchText, status, priority);
   }
 
-  deleteTask(id: number): Observable<Task> {
-    return this.taskDAOArray.delete(id);
+  updateCategory(category: Category): Observable<Category> {
+    return this.categoryDAOArray.update(category);
   }
 
+  deleteCategory(id: number): Observable<Category> {
+    return this.categoryDAOArray.delete(id);
+  }
 }

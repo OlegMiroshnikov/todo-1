@@ -6,6 +6,9 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatDialog} from '@angular/material/dialog';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
+import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
+import {Category} from '../../model/Category';
+
 
 @Component({
   selector: 'app-tasks',
@@ -14,7 +17,7 @@ import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-d
 })
 export class TasksComponent implements OnInit {
 
-  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
+  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   dataSource: MatTableDataSource<Task>;
   tasks: Task[];
 
@@ -26,6 +29,7 @@ export class TasksComponent implements OnInit {
 
   @Output() updateTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<Task>();
+  @Output() selectCategory = new EventEmitter<Category>(); // нажали на категорию из списка задач
 
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort: MatSort;
@@ -89,11 +93,12 @@ export class TasksComponent implements OnInit {
   }
 
   // диалоговое окно редактирования задачи
-  openEditTaskDialog(task: Task): void {
+  private openEditTaskDialog(task: Task): void {
     // открытие диалогового окна
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       data:
-        [task, 'Редактирование задачи'], autoFocus: false
+        [task, 'Редактирование задачи'],
+      autoFocus: false
     });
     // обработка результатов
     dialogRef.afterClosed().subscribe(result => {
@@ -119,6 +124,29 @@ export class TasksComponent implements OnInit {
         return;
       }
     });
+  }
+
+  // диалоговое окно подтверждения удаления
+  private openDeleteDialog(task: Task) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '500px',
+      data: {dialogTitle: 'Подтвердите действие', message: `Вы действительно хотите удалить задачу: "${task.title}"?`},
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { // если нажали ОК
+        this.deleteTask.emit(task);
+      }
+    });
+  }
+
+  private onToggleStatus(task: Task) {
+    task.completed = !task.completed;
+    this.updateTask.emit(task);
+  }
+
+  private onSelectCategory(category: Category): void {
+    this.selectCategory.emit(category);
   }
 
 }
