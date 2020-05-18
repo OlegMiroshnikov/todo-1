@@ -3,6 +3,7 @@ import {DataHandlerService} from '../../service/data-handler.service';
 import {Category} from '../../model/Category';
 import {EditCategoryDialogComponent} from '../../dialog/edit-category-dialog/edit-category-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {OperType} from '../../dialog/OpenType';
 
 @Component({
   selector: 'app-categories',
@@ -10,11 +11,14 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrls: ['./categories.component.css']
 })
 export class CategoriesComponent implements OnInit {
+
   @Input() categories: Category[];
   @Input() selectedCategory: Category;
+
   @Output() selectCategory = new EventEmitter<Category>();
   @Output() updateCategory = new EventEmitter<Category>();
   @Output() deleteCategory = new EventEmitter<Category>();
+  @Output() addCategory = new EventEmitter<string>(); // передаем только название новой категории
 
   // для отображения иконки редактирования при наведении на категорию
   private indexMouseMove: number;
@@ -49,7 +53,7 @@ export class CategoriesComponent implements OnInit {
     // открытие диалогового окна
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
       data:
-        [category.title, 'Редактирование категории'],
+        [category.title, 'Редактирование категории', OperType.EDIT],
       width: '400px'
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -61,6 +65,19 @@ export class CategoriesComponent implements OnInit {
         category.title = result;
         this.updateCategory.emit(category); //вызываем внешний обработчик
         return;
+      }
+    });
+  }
+
+  // диалоговое окно для добавления категории
+  private openAddCategoryDialog() {
+    const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
+      data: ['', 'Добавление категории', OperType.ADD],
+      width: '400px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.addCategory.emit(result as string); // вызываем внешний обработчик
       }
     });
   }

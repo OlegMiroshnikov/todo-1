@@ -1,14 +1,12 @@
 .pointer {
   cursor: pointer;
 }
-
 .edit-category-icon-area {
   width: 15%;
   display: inline-block;
   text-align: left;
   font-size: 13px
 }
-
 .category-title {
   width: 70%;
   display: inline-block;
@@ -23,5 +21,30 @@
 
 .edit-category-icon {
   color: #dadada;
+}
+
+.add-icon {
+  cursor: pointer;
+  font-size: 25px;
+  vertical-align: middle;
+}
+
+span.add-icon-area {
+  width: 15%;
+  display: inline-block;
+  text-align: left;
+}
+
+#categories {
+  width: 100%;
+  overflow-x: hidden; /* чтобы не было гориз. прокрутки */
+}
+
+.nav-title {
+  width: 85%;
+  display: inline-block;
+  font-size: 20px;
+  text-align: center;
+  vertical-align: middle
 }
 

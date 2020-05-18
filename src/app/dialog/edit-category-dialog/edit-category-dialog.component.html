@@ -31,7 +31,7 @@
   </div>
 
   <div class="col-12 text-center">
-    <button (click)="delete()" class="red" mat-button> Удалить категорию</button>
+    <button (click)="delete()" *ngIf="canDelete()" class="red" mat-button> Удалить категорию</button>
   </div>
 
 </mat-dialog-actions>

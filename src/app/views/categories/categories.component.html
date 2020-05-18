@@ -4,9 +4,15 @@
 
     Tip 2: you can also add an image using data-image tag
 -->
-  <div class="logo"><a href="http://www.creative-tim.com" class="simple-text logo-normal">
-    Creative Tim
-  </a></div>
+  <div class="logo">
+    <span class="nav-title">Категории</span>
+    <!--    иконка добавления новой категории -->
+    <span class="add-icon-area">
+        <button (click)="openAddCategoryDialog()" class="add-icon" mat-icon-button><mat-icon>add</mat-icon>
+        </button>
+    </span>
+  </div>
+
   <div class="sidebar-wrapper">
     <ul class="nav">
       <!-- виртуальная категория 'Все'-->

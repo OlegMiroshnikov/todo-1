@@ -8,6 +8,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 import {Category} from '../../model/Category';
+import {Priority} from '../../model/Priority';
+import {OperType} from '../../dialog/OpenType';
 
 
 @Component({
@@ -19,7 +21,8 @@ export class TasksComponent implements OnInit {
 
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   dataSource: MatTableDataSource<Task>;
-  tasks: Task[];
+  @Input() selectedCategory: Category;
+  @Output() filterByTitle = new EventEmitter<string>();
 
   @Input('tasks')
   private set setTasks(tasks: Task[]) {
@@ -27,12 +30,27 @@ export class TasksComponent implements OnInit {
     this.fillTable();
   }
 
+  @Output() filterByStatus = new EventEmitter<boolean>();
+  @Output() filterByPriority = new EventEmitter<Priority>();
+
   @Output() updateTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<Task>();
   @Output() selectCategory = new EventEmitter<Category>(); // нажали на категорию из списка задач
+  @Output() addTask = new EventEmitter<Task>();
+  private tasks: Task[];
+  private priorities: Priority[]; // список приоритетов (для фильтрации задач)
+  // поиск
+  private searchTaskText: string; // текущее значение для поиска задач
 
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort: MatSort;
+  private selectedStatusFilter: boolean = null;   // по-умолчанию будут показываться задачи по всем статусам (решенные и нерешенные)
+  private selectedPriorityFilter: Priority = null;   // по-умолчанию будут показываться задачи по всем приоритетам
+
+  @Input('priorities')
+  set setPriorities(priorities: Priority[]) {
+    this.priorities = priorities;
+  }
 
   constructor(
     private dataHandler: DataHandlerService,
@@ -97,7 +115,7 @@ export class TasksComponent implements OnInit {
     // открытие диалогового окна
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       data:
-        [task, 'Редактирование задачи'],
+        [task, 'Редактирование задачи', OperType.EDIT],
       autoFocus: false
     });
     // обработка результатов
@@ -147,6 +165,41 @@ export class TasksComponent implements OnInit {
 
   private onSelectCategory(category: Category): void {
     this.selectCategory.emit(category);
+  }
+
+  // фильтрация по названию
+  private onFilterByTitle() {
+    this.filterByTitle.emit(this.searchTaskText);
+  }
+
+  // фильтрация по статусу
+  private onFilterByStatus(value: boolean) {
+    // на всякий случай проверяем изменилось ли значение (хотя сам UI компонент должен это делать)
+    if (value !== this.selectedStatusFilter) {
+      this.selectedStatusFilter = value;
+      this.filterByStatus.emit(this.selectedStatusFilter);
+    }
+  }
+
+  // фильтрация по приоритету
+  private onFilterByPriority(value: Priority) {
+    // на всякий случай проверяем изменилось ли значение (хотя сам UI компонент должен это делать)
+    if (value !== this.selectedPriorityFilter) {
+      this.selectedPriorityFilter = value;
+      this.filterByPriority.emit(this.selectedPriorityFilter);
+    }
+  }
+
+  // диалоговое окно для добавления задачи
+  private openAddTaskDialog() {
+    // то же самое, что и при редактировании, но только передаем пустой объект Task
+    const task = new Task(null, '', false, null, this.selectedCategory);
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Добавление задачи', OperType.ADD]});
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { // если нажали ОК и есть результат
+        this.addTask.emit(task);
+      }
+    });
   }
 
 }

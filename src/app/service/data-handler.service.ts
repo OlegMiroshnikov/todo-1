@@ -17,19 +17,19 @@ import {PriorityDAOArray} from '../data/dao/impl/PriorityDAOArray';
 })
 export class DataHandlerService {
 
-  private taskDAOArray = new TaskDAOArray();
-  private categoryDAOArray = new CategoryDAOArray();
+  private taskDaoArray = new TaskDAOArray();
+  private categoryDaoArray = new CategoryDAOArray();
   private priorityDAOArray = new PriorityDAOArray();
 
   constructor() {
   }
 
   getAllTasks(): Observable<Task[]> {
-    return this.taskDAOArray.getAll();
+    return this.taskDaoArray.getAll();
   }
 
   getAllCategories(): Observable<Category []> {
-    return this.categoryDAOArray.getAll();
+    return this.categoryDaoArray.getAll();
   };
 
   getAllPriorities(): Observable<Priority[]> {
@@ -37,23 +37,33 @@ export class DataHandlerService {
   }
 
   updateTask(task: Task): Observable<Task> {
-    return this.taskDAOArray.update(task);
+    return this.taskDaoArray.update(task);
   }
 
   deleteTask(id: number): Observable<Task> {
-    return this.taskDAOArray.delete(id);
+    return this.taskDaoArray.delete(id);
   }
 
   // поиск задач по параметрам
   searchTasks(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
-    return this.taskDAOArray.search(category, searchText, status, priority);
+    return this.taskDaoArray.search(category, searchText, status, priority);
   }
 
   updateCategory(category: Category): Observable<Category> {
-    return this.categoryDAOArray.update(category);
+    return this.categoryDaoArray.update(category);
   }
 
   deleteCategory(id: number): Observable<Category> {
-    return this.categoryDAOArray.delete(id);
+    return this.categoryDaoArray.delete(id);
   }
+
+  addTask(task: Task): Observable<Task> {
+    return this.taskDaoArray.add(task);
+  }
+
+  addCategory(title: string): Observable<Category> {
+    return this.categoryDaoArray.add(new Category(null, title));
+  }
+
+
 }

@@ -71,9 +71,13 @@
   </div>
 
   <div class="col-md-7 col-12 text-right">
-    <button (click)="complete()" *ngIf="!task.completed" class="green" mat-button> Завершить задачу</button>
-    <button (click)="activate()" *ngIf="task.completed" class="green" mat-button> Активировать</button>
-    <button (click)="delete()" class="red" mat-button> Удалить задачу</button>
+    <button (click)="complete()" *ngIf="!task.completed && canActivateDesactivate()" class="green" mat-button> Завершить
+      задачу
+    </button>
+    <button (click)="activate()" *ngIf="task.completed && canActivateDesactivate()" class="green" mat-button>
+      Активировать
+    </button>
+    <button (click)="delete()" *ngIf="canDelete()" class="red" mat-button> Удалить задачу</button>
   </div>
 
 </mat-dialog-actions>

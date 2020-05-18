@@ -5,6 +5,7 @@ import {Category} from '../../model/Category';
 import {DataHandlerService} from '../../service/data-handler.service';
 import {Priority} from '../../model/Priority';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {OperType} from '../../../../templates/material-dashboard-master/material-dashboard-master/examples/todo-add-task_h/src/app/dialog/OperType';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -19,6 +20,7 @@ export class EditTaskDialogComponent implements OnInit {
   private priorities: Priority[];
   private dialogTitle: string; // заголовок окна
   private task: Task; // задача для редактирования/создания
+  private operType: OperType;
 
   // сохраняем все значения в отдельные переменные
   // чтобы изменения не сказывались на самой задаче и можно было отменить изменения
@@ -29,7 +31,7 @@ export class EditTaskDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>, // для возможности работы с текущим диалог. окном
-    @Inject(MAT_DIALOG_DATA) private data: [Task, string], // данные, которые передали в диалоговое окно
+    @Inject(MAT_DIALOG_DATA) private data: [Task, string, OperType], // данные, которые передали в диалоговое окно
     private dataHandler: DataHandlerService, // ссылка на сервис для работы с данными
     private dialog: MatDialog // для открытия нового диалогового окна (из текущего) - например, для подтверждения удаления
   ) {
@@ -38,6 +40,7 @@ export class EditTaskDialogComponent implements OnInit {
   ngOnInit() {
     this.task = this.data[0]; // задача для редактирования/создания
     this.dialogTitle = this.data[1]; // текст для диалогового окна
+    this.operType = this.data[2]; // тип операции
 
     // инициализация начальных значений (записывам в отдельные переменные
     // чтобы можно было отменить изменения, а то будут сразу записываться в задачу)
@@ -93,6 +96,14 @@ export class EditTaskDialogComponent implements OnInit {
   // делаем статус задачи "незавершенным" (нажали "активировать задачу")
   private activate() {
     this.dialogRef.close('activate');
+  }
+
+  private canDelete(): boolean {
+    return this.operType === OperType.EDIT;
+  }
+
+  private canActivateDesactivate(): boolean {
+    return this.operType === OperType.EDIT;
   }
 
 }
