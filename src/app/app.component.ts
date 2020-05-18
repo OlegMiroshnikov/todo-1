@@ -18,6 +18,7 @@ export class AppComponent {
 
   // поиск
   private searchTaskText = ''; // текущее значение для поиска задач
+  private searchCategoryText = ''; // текущее значение для поиска категорий
   private statusFilter: boolean; // фильтрация по статусу
   private priorityFilter: Priority; // фильтрация по приоритету
 
@@ -68,14 +69,15 @@ export class AppComponent {
   private onDeleteCategory(category: Category) {
     this.dataHandler.deleteCategory(category.id).subscribe(cat => {
       this.selectedCategory = null; // открываем категорию "Все"
-      this.onSelectCategory(this.selectedCategory);
+      // this.onSelectCategory(null);
+      this.onSearchCategory(this.searchCategoryText);
     });
   }
 
   // обновлении категории
   private onUpdateCategory(category: Category) {
     this.dataHandler.updateCategory(category).subscribe(() => {
-      this.onSelectCategory(this.selectedCategory);
+      this.onSearchCategory(this.searchCategoryText);
     });
   }
 
@@ -122,6 +124,14 @@ export class AppComponent {
 
   private updateCategories() {
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
+  }
+
+  // поиск категории
+  private onSearchCategory(title: string) {
+    this.searchCategoryText = title;
+    this.dataHandler.searchCategories(title).subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
 }

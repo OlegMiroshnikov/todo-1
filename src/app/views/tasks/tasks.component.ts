@@ -59,7 +59,7 @@ export class TasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource();
-    this.fillTable();
+    this.onSelectCategory(null);
   }
 
   // в зависимости от статуса задачи - вернуть цвет названия
