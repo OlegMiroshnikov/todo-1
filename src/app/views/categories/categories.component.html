@@ -1,9 +1,5 @@
-<div class="sidebar" data-color="purple" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">
-  <!--
-    Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+<div class="sidebar" data-background-color="white" data-color="purple">
 
-    Tip 2: you can also add an image using data-image tag
--->
   <div class="logo">
     <span class="nav-title">Категории</span>
 
@@ -41,7 +37,6 @@
         </mat-form-field>
       </div>
 
-
       <!-- виртуальная категория 'Все'-->
       <li (click)="showTasksByCategory(null)"
           [class.active]="selectedCategory === null"
@@ -78,4 +73,6 @@
       </li>
     </ul>
   </div>
+  <div class="sidebar-background"></div>
 </div>
+

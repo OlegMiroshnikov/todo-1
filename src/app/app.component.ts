@@ -3,6 +3,7 @@ import {Task} from './model/Task';
 import {DataHandlerService} from './service/data-handler.service';
 import {Category} from './model/Category';
 import {Priority} from './model/Priority';
+import {zip} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,12 @@ export class AppComponent {
   private categories: Category[];
   private priorities: Priority[];
   private selectedCategory: Category = null;
+
+  // статистика
+  private totalTasksCountInCategory: number;
+  private completedCountInCategory: number;
+  private uncompletedCountInCategory: number;
+  private uncompletedTotalTasksCount: number;
 
   // поиск
   private searchTaskText = ''; // текущее значение для поиска задач
@@ -34,34 +41,48 @@ export class AppComponent {
   // выбор категории
   private onSelectCategory(category: Category) {
     this.selectedCategory = category;
-    this.updateTasks();
+    this.updateTasksAndStat();
   }
+
+  // // обновление задачи
+  // private onUpdateTask(task: Task) {
+  //   this.dataHandler.updateTask(task).subscribe(() => {
+  //     this.dataHandler.searchTasks(
+  //       this.selectedCategory,
+  //       null,
+  //       null,
+  //       null
+  //     ).subscribe(tasks => {
+  //       this.tasks = tasks;
+  //     });
+  //   });
+  // }
 
   // обновление задачи
   private onUpdateTask(task: Task) {
-    this.dataHandler.updateTask(task).subscribe(() => {
-      this.dataHandler.searchTasks(
-        this.selectedCategory,
-        null,
-        null,
-        null
-      ).subscribe(tasks => {
-        this.tasks = tasks;
-      });
+    this.dataHandler.updateTask(task).subscribe(cat => {
+      this.updateTasksAndStat();
     });
   }
 
+  // // удаление задачи
+  // private onDeleteTask(task: Task) {
+  //   this.dataHandler.deleteTask(task.id).subscribe(() => {
+  //     this.dataHandler.searchTasks(
+  //       this.selectedCategory,
+  //       null,
+  //       null,
+  //       null
+  //     ).subscribe(tasks => {
+  //       this.tasks = tasks;
+  //     });
+  //   });
+  // }
+
   // удаление задачи
   private onDeleteTask(task: Task) {
-    this.dataHandler.deleteTask(task.id).subscribe(() => {
-      this.dataHandler.searchTasks(
-        this.selectedCategory,
-        null,
-        null,
-        null
-      ).subscribe(tasks => {
-        this.tasks = tasks;
-      });
+    this.dataHandler.deleteTask(task.id).subscribe(cat => {
+      this.updateTasksAndStat();
     });
   }
 
@@ -112,7 +133,7 @@ export class AppComponent {
   // добавление задачи
   private onAddTask(task: Task) {
     this.dataHandler.addTask(task).subscribe(result => {
-      this.updateTasks();
+      this.updateTasksAndStat();
     });
   }
 
@@ -132,6 +153,29 @@ export class AppComponent {
     this.dataHandler.searchCategories(title).subscribe(categories => {
       this.categories = categories;
     });
+  }
+
+  // показывает задачи с применением всех текущий условий (категория, поиск, фильтры и пр.)
+  private updateTasksAndStat() {
+    this.updateTasks(); // обновить список задач
+    // обновить переменные для статистики
+    this.updateStat();
+  }
+
+  // обновить статистику
+  private updateStat() {
+    zip(
+      this.dataHandler.getTotalCountInCategory(this.selectedCategory),
+      this.dataHandler.getCompletedCountInCategory(this.selectedCategory),
+      this.dataHandler.getUncompletedCountInCategory(this.selectedCategory),
+      this.dataHandler.getUncompletedTotalCount())
+
+      .subscribe(array => {
+        this.totalTasksCountInCategory = array[0];
+        this.completedCountInCategory = array[1];
+        this.uncompletedCountInCategory = array[2];
+        this.uncompletedTotalTasksCount = array[3]; // нужно для категории Все
+      });
   }
 
 }
