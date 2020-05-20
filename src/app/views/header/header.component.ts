@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -7,10 +7,23 @@ import {Component, OnInit} from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
+  @Input()
+  categoryName: string;
+  @Output()
+  toggleStat = new EventEmitter<boolean>(); // показать/скрыть статистику
+  @Input()
+  private showStat: boolean;
+
+
   constructor() {
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
   }
+
+  private onToggleStat() {
+    this.toggleStat.emit(!this.showStat); // вкл/выкл статистику
+  }
+
 
 }

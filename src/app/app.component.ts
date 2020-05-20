@@ -23,6 +23,9 @@ export class AppComponent {
   private uncompletedCountInCategory: number;
   private uncompletedTotalTasksCount: number;
 
+  // показать/скрыть статистику
+  private showStat = true;
+
   // поиск
   private searchTaskText = ''; // текущее значение для поиска задач
   private searchCategoryText = ''; // текущее значение для поиска категорий
@@ -176,6 +179,11 @@ export class AppComponent {
         this.uncompletedCountInCategory = array[2];
         this.uncompletedTotalTasksCount = array[3]; // нужно для категории Все
       });
+  }
+
+  // показать-скрыть статистику
+  private toggleStat(showStat: boolean) {
+    this.showStat = showStat;
   }
 
 }

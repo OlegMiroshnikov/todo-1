@@ -1,1 +1,24 @@
-<p>header works!</p>
+<div class="container-fluid">
+  <div class="row settings col-12">
+
+    <!--  выбранная категория и переключение на показ статистики-->
+    <div class="col-10 text-left align-self-top">
+      <p class="navbar-brand">{{categoryName}}</p>
+      <p (click)="onToggleStat()" *ngIf="showStat" class="link navbar-brand">Скрыть статистику</p>
+      <p (click)="onToggleStat()" *ngIf="!showStat" class="link navbar-brand">Показать статистику </p>
+    </div>
+
+    <!--  помощь, настройки-->
+    <div class="col-2 text-right align-self-top">
+      <button class="header-icon" mat-icon-button>
+        <mat-icon>settings</mat-icon>
+      </button>
+
+      <button class="header-icon" mat-icon-button>
+        <mat-icon>help</mat-icon>
+      </button>
+
+    </div>
+  </div>
+</div>
+
