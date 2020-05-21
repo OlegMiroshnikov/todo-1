@@ -29,13 +29,13 @@ export class TasksComponent implements OnInit {
   }
 
   @Input() selectedCategory: Category;
-  @Output() filterByTitle = new EventEmitter<string>();
 
   @Input('priorities')
   set setPriorities(priorities: Priority[]) {
     this.priorities = priorities;
   }
 
+  @Output() filterByTitle = new EventEmitter<string>();
   @Output() filterByStatus = new EventEmitter<boolean>();
   @Output() filterByPriority = new EventEmitter<Priority>();
   @Output() updateTask = new EventEmitter<Task>();
