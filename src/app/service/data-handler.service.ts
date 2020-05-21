@@ -69,6 +69,18 @@ export class DataHandlerService {
     return this.categoryDaoArray.search(title);
   }
 
+  deletePriority(id: number): Observable<Priority> {
+    return this.priorityDAOArray.delete(id);
+  }
+
+  updatePriority(priority: Priority): Observable<Priority> {
+    return this.priorityDAOArray.update(priority);
+  }
+
+  addPriority(priority: Priority): Observable<Priority> {
+    return this.priorityDAOArray.add(priority);
+  }
+
   // статистика
 
   getCompletedCountInCategory(category: Category): Observable<number> {

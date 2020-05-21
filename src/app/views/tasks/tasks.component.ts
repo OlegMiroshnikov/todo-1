@@ -21,8 +21,6 @@ export class TasksComponent implements OnInit {
 
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   dataSource: MatTableDataSource<Task>;
-  @Input() selectedCategory: Category;
-  @Output() filterByTitle = new EventEmitter<string>();
 
   @Input('tasks')
   private set setTasks(tasks: Task[]) {
@@ -30,15 +28,24 @@ export class TasksComponent implements OnInit {
     this.fillTable();
   }
 
+  @Input() selectedCategory: Category;
+  @Output() filterByTitle = new EventEmitter<string>();
+
+  @Input('priorities')
+  set setPriorities(priorities: Priority[]) {
+    this.priorities = priorities;
+  }
+
   @Output() filterByStatus = new EventEmitter<boolean>();
   @Output() filterByPriority = new EventEmitter<Priority>();
-
   @Output() updateTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<Task>();
   @Output() selectCategory = new EventEmitter<Category>(); // нажали на категорию из списка задач
   @Output() addTask = new EventEmitter<Task>();
+
   private tasks: Task[];
   private priorities: Priority[]; // список приоритетов (для фильтрации задач)
+
   // поиск
   private searchTaskText: string; // текущее значение для поиска задач
 
@@ -46,11 +53,6 @@ export class TasksComponent implements OnInit {
   @ViewChild(MatSort, {static: false}) private sort: MatSort;
   private selectedStatusFilter: boolean = null;   // по-умолчанию будут показываться задачи по всем статусам (решенные и нерешенные)
   private selectedPriorityFilter: Priority = null;   // по-умолчанию будут показываться задачи по всем приоритетам
-
-  @Input('priorities')
-  set setPriorities(priorities: Priority[]) {
-    this.priorities = priorities;
-  }
 
   constructor(
     private dataHandler: DataHandlerService,

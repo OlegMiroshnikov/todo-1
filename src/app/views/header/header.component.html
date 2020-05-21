@@ -11,7 +11,9 @@
     <!--  помощь, настройки-->
     <div class="col-2 text-right align-self-top">
       <button class="header-icon" mat-icon-button>
-        <mat-icon>settings</mat-icon>
+        <button (click)="showSettings()" class="header-icon" mat-icon-button>
+          <mat-icon>settings</mat-icon>
+        </button>
       </button>
 
       <button class="header-icon" mat-icon-button>
