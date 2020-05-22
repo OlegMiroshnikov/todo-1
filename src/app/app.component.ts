@@ -12,16 +12,19 @@ import {IntroService} from './service/intro.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
 
-  private tasks: Task[];
-  private categories: Category[];
+// компонент-контейнер (Smart, Container), который управляет другими  компонентами (Dumb, Presentational)
+export class AppComponent {
 
   // коллекция категорий с кол-вом незавершенных задач для каждой из них
   private categoryMap = new Map<Category, number>();
 
-  private priorities: Priority[];
-  private selectedCategory: Category = null;
+  private tasks: Task[];          // все задачи
+  private categories: Category[]; // все категории
+  private priorities: Priority[]; // все приоритеты
+
+  // выбранная категория
+  private selectedCategory: Category = null; // null - значит будет выбрана категория "Все"
 
   // статистика
   private totalTasksCountInCategory: number;
@@ -35,13 +38,22 @@ export class AppComponent {
   // поиск
   private searchTaskText = ''; // текущее значение для поиска задач
   private searchCategoryText = ''; // текущее значение для поиска категорий
-  private statusFilter: boolean; // фильтрация по статусу
-  private priorityFilter: Priority; // фильтрация по приоритету
+
+  // фильтрация
+  private priorityFilter: Priority;
+  private statusFilter: boolean;
+
+  // параметры бокового меню с категориями
+  private menuOpened: boolean; // открыть-закрыть
+  private menuMode: string; // тип выдвижения (поверх, с толканием и пр.)
+  private menuPosition: string; // сторона
+  private showBackdrop: boolean; // показывать фоновое затемнение или нет
 
   constructor(
     private dataHandler: DataHandlerService, // Фасад для работы с данными
     private introService: IntroService // вводная справоч. информация с выделением областей
   ) {
+    this.setMenuValues(); // установить настройки меню
   }
 
   ngOnInit(): void {
@@ -237,6 +249,24 @@ export class AppComponent {
   // показать-скрыть статистику
   private toggleStat(showStat: boolean) {
     this.showStat = showStat;
+  }
+
+  // если закрыли меню любым способом - ставим значение false
+  private onClosedMenu() {
+    this.menuOpened = false;
+  }
+
+  // параметры меню
+  private setMenuValues() {
+    this.menuPosition = 'left'; // расположение слева
+    this.menuOpened = true; // меню сразу будет открыто по-умолчанию
+    this.menuMode = 'push'; // будет "толкать" основной контент, а не закрывать его
+    this.showBackdrop = false; // показывать темный фон или нет (нужно больше для мобильной версии)
+  }
+
+  // показать-скрыть меню
+  private toggleMenu() {
+    this.menuOpened = !this.menuOpened;
   }
 
 }

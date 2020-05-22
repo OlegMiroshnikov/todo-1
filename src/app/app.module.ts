@@ -35,6 +35,7 @@ import {ColorPickerModule} from 'ngx-color-picker';
 import {PrioritiesComponent} from './views/priorities/priorities.component';
 import {SettingsDialogComponent} from './dialog/settings-dialog/settings-dialog.component';
 import {EditPriorityDialogComponent} from './dialog/edit-priority-dialog/edit-priority-dialog.component';
+import {SidebarModule} from 'ng-sidebar';
 
 registerLocaleData(localeRu);
 
@@ -73,7 +74,8 @@ registerLocaleData(localeRu);
     MatDatepickerModule,
     MatNativeDateModule,
     MatCheckboxModule,
-    ColorPickerModule
+    ColorPickerModule,
+    SidebarModule
   ],
   providers: [],
   entryComponents: [

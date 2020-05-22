@@ -3,6 +3,12 @@
 
     <!--  выбранная категория и переключение на показ статистики-->
     <div class="col-10 text-left align-self-top">
+
+      <!--  sidebar меню      -->
+      <button (click)="onToggleMenu()" mat-icon-button type="button">
+        <mat-icon>menu</mat-icon>
+      </button>
+
       <p class="navbar-brand">{{categoryName}}</p>
       <p (click)="onToggleStat()" *ngIf="showStat" class="link navbar-brand">Скрыть статистику</p>
       <p (click)="onToggleStat()" *ngIf="!showStat" class="link navbar-brand">Показать статистику </p>
