@@ -24,6 +24,7 @@
     "@angular/router": "~9.1.4",
     "bootstrap-css-only": "^4.4.1",
     "intro.js": "^2.9.3",
+    "ng-sidebar": "^9.2.1",
     "ngx-color-picker": "^9.1.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

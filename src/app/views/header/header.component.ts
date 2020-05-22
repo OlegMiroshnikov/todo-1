@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {SettingsDialogComponent} from '../../dialog/settings-dialog/settings-dialog.component';
+import {IntroService} from '../../service/intro.service';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +18,9 @@ export class HeaderComponent implements OnInit {
   private showStat: boolean;
 
 
-  constructor(private dialog: MatDialog) {
+  constructor(
+    private dialog: MatDialog,
+    private introService: IntroService) {
   }
 
   ngOnInit() {
@@ -37,5 +40,7 @@ export class HeaderComponent implements OnInit {
     // никаких действий не требуется после закрытия окна
   }
 
-
+  private showIntroHelp() {
+    this.introService.startIntroJS(false);
+  }
 }

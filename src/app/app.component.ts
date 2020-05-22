@@ -5,6 +5,7 @@ import {Category} from './model/Category';
 import {Priority} from './model/Priority';
 import {zip} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
+import {IntroService} from './service/intro.service';
 
 @Component({
   selector: 'app-root',
@@ -37,7 +38,10 @@ export class AppComponent {
   private statusFilter: boolean; // фильтрация по статусу
   private priorityFilter: Priority; // фильтрация по приоритету
 
-  constructor(private dataHandler: DataHandlerService) {
+  constructor(
+    private dataHandler: DataHandlerService, // Фасад для работы с данными
+    private introService: IntroService // вводная справоч. информация с выделением областей
+  ) {
   }
 
   ngOnInit(): void {
@@ -45,6 +49,7 @@ export class AppComponent {
     this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
     this.fillCategories();     // заполнить меню с категориями
     this.onSelectCategory(null);
+    this.introService.startIntroJS(true);
   }
 
   // private fillCategories(): void {
