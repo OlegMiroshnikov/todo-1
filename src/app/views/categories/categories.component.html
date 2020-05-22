@@ -51,13 +51,13 @@
       <!-- разделитель-->
       <div class="line"></div>
 
-      <div *ngIf="categories.length === 0"><p class="not-found">Ничего не найдено</p></div>
+      <div *ngIf="categoryMap.size === 0"><p class="not-found">Ничего не найдено</p></div>
 
       <!-- все конкретные категории-->
       <li (click)="showTasksByCategory(mapValue.key)"
           (mouseenter)="showEditIcon(index)"
           (mouseleave)="showEditIcon(null)"
-          *ngFor="let mapValue of selectedCategoryMap | keyvalue; let index = index"
+          *ngFor="let mapValue of categoryMap | keyvalue; let index = index"
           [class.active]="mapValue.key === selectedCategory"
           class="nav-item pointer">
         <a class="nav-link">
@@ -67,7 +67,7 @@
           <span class="edit-category-icon-area">
             <mat-icon
               (click)="$event.stopPropagation(); openEditDialog(mapValue.key)"
-              *ngIf="indexMouseMove === index"
+              *ngIf="indexMouseMove === index || isMobile || isTablet"
               class="edit-category-icon">edit</mat-icon>
           </span>
           <!--сколько невыполненных задач-->

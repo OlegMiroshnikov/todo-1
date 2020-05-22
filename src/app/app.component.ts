@@ -5,6 +5,7 @@ import {Category} from './model/Category';
 import {Priority} from './model/Priority';
 import {zip} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
+import {DeviceDetectorService} from 'ngx-device-detector';
 import {IntroService} from './service/intro.service';
 
 @Component({
@@ -49,11 +50,21 @@ export class AppComponent {
   private menuPosition: string; // сторона
   private showBackdrop: boolean; // показывать фоновое затемнение или нет
 
+  // тип устройства
+  private isMobile: boolean;
+  private isTablet: boolean;
+
   constructor(
-    private dataHandler: DataHandlerService, // Фасад для работы с данными
-    private introService: IntroService // вводная справоч. информация с выделением областей
+    private dataHandler: DataHandlerService, // фасад для работы с данными
+    private introService: IntroService, // вводная справоч. информация с выделением областей
+    private deviceService: DeviceDetectorService // для определения типа устройства (моб., десктоп, планшет)
   ) {
+    // определяем тип запроса
+    this.isMobile = deviceService.isMobile();
+    this.isTablet = deviceService.isTablet();
+    this.showStat = true ? !this.isMobile : false; // если моб. устройство, то по-умолчанию не показывать статистику
     this.setMenuValues(); // установить настройки меню
+
   }
 
   ngOnInit(): void {
@@ -61,7 +72,13 @@ export class AppComponent {
     this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
     this.fillCategories();     // заполнить меню с категориями
     this.onSelectCategory(null);
-    this.introService.startIntroJS(true);
+
+    // для мобильных и планшетов - не показывать интро
+    if (!this.isMobile && !this.isTablet) {
+      // пробуем показать приветственные справочные материалы
+      this.introService.startIntroJS(true);
+    }
+
   }
 
   // private fillCategories(): void {
@@ -256,12 +273,18 @@ export class AppComponent {
     this.menuOpened = false;
   }
 
-  // параметры меню
+  // настройки бокового меню для моб. и десктоп вариантов
   private setMenuValues() {
-    this.menuPosition = 'left'; // расположение слева
-    this.menuOpened = true; // меню сразу будет открыто по-умолчанию
-    this.menuMode = 'push'; // будет "толкать" основной контент, а не закрывать его
-    this.showBackdrop = false; // показывать темный фон или нет (нужно больше для мобильной версии)
+    this.menuPosition = 'left'; // меню слева
+    if (this.isMobile) {
+      this.menuOpened = false; // на моб. версии по-умолчанию меню будет закрыто
+      this.menuMode = 'over'; // поверх всего контента
+      this.showBackdrop = true; // показывать темный фон или нет (нужно для мобильной версии)
+    } else {
+      this.menuOpened = true; // не в моб. версии  по-умолчанию меню будет открыто (т.к. хватает места)
+      this.menuMode = 'push'; // будет "толкать" основной контент, а не закрывать его
+      this.showBackdrop = false; // показывать темный фон или нет
+    }
   }
 
   // показать-скрыть меню

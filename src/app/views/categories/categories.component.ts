@@ -4,6 +4,7 @@ import {Category} from '../../model/Category';
 import {EditCategoryDialogComponent} from '../../dialog/edit-category-dialog/edit-category-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {OperType} from '../../dialog/OpenType';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'app-categories',
@@ -16,7 +17,7 @@ export class CategoriesComponent implements OnInit {
   @Input() selectedCategory: Category;
 
   @Input() uncompletedTotal: number;  // кол-во невыполненных задач всего
-  private selectedCategoryMap: Map<Category, number>; // список всех категорий и кол-во активных задач
+  private categoryMap: Map<Category, number>; // список всех категорий и кол-во активных задач
 
   @Output() selectCategory = new EventEmitter<Category>();
   @Output() updateCategory = new EventEmitter<Category>();
@@ -27,16 +28,21 @@ export class CategoriesComponent implements OnInit {
   // для отображения иконки редактирования при наведении на категорию
   private indexMouseMove: number;
   private searchCategoryTitle: string; // текущее значение для поиска категорий
-
-  @Input('categoryMap') // категории с кол-вом активных задач для каждой из них
-  set setCategoryMap(categoryMap: Map<Category, number>) {
-    this.selectedCategoryMap = categoryMap;
-  }
+  private isMobile: boolean;
+  private isTablet: boolean;
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialog: MatDialog // внедряем MatDialog, чтобы работать с диалоговыми окнами
+    private dialog: MatDialog, // внедряем MatDialog, чтобы работать с диалоговыми окнами
+    private deviceService: DeviceDetectorService // для определения типа устройства
   ) {
+    this.isMobile = deviceService.isMobile();
+    this.isTablet = deviceService.isTablet();
+  }
+
+  @Input('categoryMap') // категории с кол-вом активных задач для каждой из них
+  set setCategoryMap(categoryMap: Map<Category, number>) {
+    this.categoryMap = categoryMap;
   }
 
   ngOnInit(): void {
