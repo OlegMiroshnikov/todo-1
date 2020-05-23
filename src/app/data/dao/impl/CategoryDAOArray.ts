@@ -13,9 +13,9 @@ export class CategoryDAOArray implements CategoryDAO {
     return of(category);
   }
 
-  private getLastIdCategory(): number {
-    return Math.max.apply(Math, TestData.categories.map(category => category.id)) + 1;
-  }
+   getLastIdCategory(): number {
+     return Math.max.apply(Math, TestData.categories.map(category => category.id)) + 1;
+   }
 
   delete(id: number): Observable<Category> {
     // перед удалением - нужно в задачах занулить все ссылки на удаленное значение

@@ -9,9 +9,9 @@ import {OperType} from '../OpenType';
   styleUrls: ['./edit-priority-dialog.component.css']
 })
 export class EditPriorityDialogComponent implements OnInit {
-  private dialogTitle: string; // заголовок окна
-  private priorityTitle: string;
-  private operType: OperType; // тип операции
+  dialogTitle: string; // заголовок окна
+  priorityTitle: string;
+  operType: OperType; // тип операции
 
   constructor(
     private dialogRef: MatDialogRef<EditPriorityDialogComponent>, // для возможности работы с текущим диалог. окном
@@ -28,17 +28,17 @@ export class EditPriorityDialogComponent implements OnInit {
   }
 
   // нажали ОК
-  private onConfirm(): void {
+  onConfirm(): void {
     this.dialogRef.close(this.priorityTitle);
   }
 
   // нажали отмену (ничего не сохраняем и закрываем окно)
-  private onCancel() {
+  onCancel() {
     this.dialogRef.close(false);
   }
 
   // нажали Удалить
-  private delete() {
+  delete() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
       data: {
@@ -54,7 +54,7 @@ export class EditPriorityDialogComponent implements OnInit {
     });
   }
 
-  private canDelete(): boolean {
+  canDelete(): boolean {
     return this.operType === OperType.EDIT;
   }
 

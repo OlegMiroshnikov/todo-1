@@ -16,18 +16,18 @@ import {OperType} from '../../../../templates/material-dashboard-master/material
 // редактирование/создание задачи
 export class EditTaskDialogComponent implements OnInit {
 
-  private categories: Category[];
-  private priorities: Priority[];
-  private dialogTitle: string; // заголовок окна
-  private task: Task; // задача для редактирования/создания
-  private operType: OperType;
+  categories: Category[];
+  priorities: Priority[];
+  dialogTitle: string; // заголовок окна
+  task: Task; // задача для редактирования/создания
+  operType: OperType;
 
   // сохраняем все значения в отдельные переменные
   // чтобы изменения не сказывались на самой задаче и можно было отменить изменения
-  private tmpTitle: string;
-  private tmpCategory: Category;
-  private tmpPriority: Priority;
-  private tmpDate: Date;
+  tmpTitle: string;
+  tmpCategory: Category;
+  tmpPriority: Priority;
+  tmpDate: Date;
 
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>, // для возможности работы с текущим диалог. окном
@@ -53,7 +53,7 @@ export class EditTaskDialogComponent implements OnInit {
   }
 
   // нажали ОК
-  private onConfirm(): void {
+  onConfirm(): void {
     // считываем все значения для сохранения в поля задачи
     this.task.title = this.tmpTitle;
     this.task.category = this.tmpCategory;
@@ -66,12 +66,12 @@ export class EditTaskDialogComponent implements OnInit {
   }
 
   // нажали отмену (ничего не сохраняем и закрываем окно)
-  private onCancel(): void {
+  onCancel(): void {
     this.dialogRef.close(null);
   }
 
   // нажали Удалить
-  private delete() {
+  delete() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
       data: {
@@ -88,21 +88,21 @@ export class EditTaskDialogComponent implements OnInit {
   }
 
   // делаем статус задачи "завершённым" (нажали "завершить задачу")
-  private complete() {
+  complete() {
     this.dialogRef.close('complete');
 
   }
 
   // делаем статус задачи "незавершенным" (нажали "активировать задачу")
-  private activate() {
+  activate() {
     this.dialogRef.close('activate');
   }
 
-  private canDelete(): boolean {
+  canDelete(): boolean {
     return this.operType === OperType.EDIT;
   }
 
-  private canActivateDesactivate(): boolean {
+  canActivateDesactivate(): boolean {
     return this.operType === OperType.EDIT;
   }
 

@@ -60,11 +60,11 @@ export class TaskDAOArray implements TaskDAO {
   // поиск задач по параметрам
 
   // находит последний id (чтобы потом вставить новую запись с id, увеличенным на 1) - в реальной БД это происходит автоматически
-  private getLastIdTask(): number {
-    return Math.max.apply(Math, TestData.tasks.map(task => task.id)) + 1;
-  }
+   getLastIdTask(): number {
+     return Math.max.apply(Math, TestData.tasks.map(task => task.id)) + 1;
+   }
 
-  private searchTasks(category: Category, searchText: string, status: boolean, priority: Priority): Task[] {
+  searchTasks(category: Category, searchText: string, status: boolean, priority: Priority): Task[] {
     let allTasks = TestData.tasks;
     if (status != null) {
       allTasks = allTasks.filter(task => task.completed === status);

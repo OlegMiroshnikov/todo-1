@@ -18,41 +18,41 @@ import {IntroService} from './service/intro.service';
 export class AppComponent {
 
   // коллекция категорий с кол-вом незавершенных задач для каждой из них
-  private categoryMap = new Map<Category, number>();
+  categoryMap = new Map<Category, number>();
 
-  private tasks: Task[];          // все задачи
-  private categories: Category[]; // все категории
-  private priorities: Priority[]; // все приоритеты
+  tasks: Task[];          // все задачи
+  categories: Category[]; // все категории
+  priorities: Priority[]; // все приоритеты
 
   // выбранная категория
-  private selectedCategory: Category = null; // null - значит будет выбрана категория "Все"
+  selectedCategory: Category = null; // null - значит будет выбрана категория "Все"
 
   // статистика
-  private totalTasksCountInCategory: number;
-  private completedCountInCategory: number;
-  private uncompletedCountInCategory: number;
-  private uncompletedTotalTasksCount: number;
+  totalTasksCountInCategory: number;
+  completedCountInCategory: number;
+  uncompletedCountInCategory: number;
+  uncompletedTotalTasksCount: number;
 
   // показать/скрыть статистику
-  private showStat = true;
+  showStat = true;
 
   // поиск
-  private searchTaskText = ''; // текущее значение для поиска задач
-  private searchCategoryText = ''; // текущее значение для поиска категорий
+  searchTaskText = ''; // текущее значение для поиска задач
+  searchCategoryText = ''; // текущее значение для поиска категорий
 
   // фильтрация
-  private priorityFilter: Priority;
-  private statusFilter: boolean;
+  priorityFilter: Priority;
+  statusFilter: boolean;
 
   // параметры бокового меню с категориями
-  private menuOpened: boolean; // открыть-закрыть
-  private menuMode: string; // тип выдвижения (поверх, с толканием и пр.)
-  private menuPosition: string; // сторона
-  private showBackdrop: boolean; // показывать фоновое затемнение или нет
+  menuOpened: boolean; // открыть-закрыть
+  menuMode: string; // тип выдвижения (поверх, с толканием и пр.)
+  menuPosition: string; // сторона
+  showBackdrop: boolean; // показывать фоновое затемнение или нет
 
   // тип устройства
-  private isMobile: boolean;
-  private isTablet: boolean;
+  isMobile: boolean;
+  isTablet: boolean;
 
   constructor(
     private dataHandler: DataHandlerService, // фасад для работы с данными
@@ -86,7 +86,7 @@ export class AppComponent {
   // }
 
   // заполняет категории и кол-во невыполненных задач по каждой из них (нужно для отображения категорий)
-  private fillCategories() {
+  fillCategories() {
     if (this.categoryMap) {
       this.categoryMap.clear();
     }
@@ -98,12 +98,12 @@ export class AppComponent {
   }
 
   // добавление категории
-  private onAddCategory(title: string): void {
+  onAddCategory(title: string): void {
     this.dataHandler.addCategory(title).subscribe(() => this.fillCategories());
   }
 
   // // удаление категории
-  // private onDeleteCategory(category: Category) {
+  //  onDeleteCategory(category: Category) {
   //   this.dataHandler.deleteCategory(category.id).subscribe(cat => {
   //     this.selectedCategory = null; // открываем категорию "Все"
   //     this.onSearchCategory(this.searchCategoryText);
@@ -111,7 +111,7 @@ export class AppComponent {
   // }
 
   // удаление категории
-  private onDeleteCategory(category: Category) {
+  onDeleteCategory(category: Category) {
     this.dataHandler.deleteCategory(category.id).subscribe(cat => {
       this.selectedCategory = null; // открываем категорию "Все"
       this.categoryMap.delete(cat); // не забыть удалить категорию из карты
@@ -121,7 +121,7 @@ export class AppComponent {
   }
 
   // обновлении категории
-  private onUpdateCategory(category: Category) {
+  onUpdateCategory(category: Category) {
     this.dataHandler.updateCategory(category).subscribe(() => {
       this.onSearchCategory(this.searchCategoryText);
     });
@@ -135,7 +135,7 @@ export class AppComponent {
   // }
 
   // обновление задачи
-  private onUpdateTask(task: Task): void {
+  onUpdateTask(task: Task): void {
     this.dataHandler.updateTask(task).subscribe(() => {
       this.fillCategories();
       this.updateTasksAndStat();
@@ -143,14 +143,14 @@ export class AppComponent {
   }
 
   // // удаление задачи
-  // private onDeleteTask(task: Task) {
+  //  onDeleteTask(task: Task) {
   //   this.dataHandler.deleteTask(task.id).subscribe(cat => {
   //     this.updateTasksAndStat();
   //   });
   // }
 
   // удаление задачи
-  private onDeleteTask(task: Task) {
+  onDeleteTask(task: Task) {
     this.dataHandler.deleteTask(task.id).pipe(
       concatMap(task => {
           return this.dataHandler.getUncompletedCountInCategory(task.category)
@@ -177,7 +177,7 @@ export class AppComponent {
   // }
 
   // добавление задачи
-  private onAddTask(task: Task) {
+  onAddTask(task: Task) {
     this.dataHandler.addTask(task).pipe(// сначала добавляем задачу
       concatMap(task => { // используем добавленный task (concatMap - для последовательного выполнения)
           // .. и считаем кол-во задач в категории с учетом добавленной задачи
@@ -197,13 +197,13 @@ export class AppComponent {
   }
 
   // выбор категории
-  private onSelectCategory(category: Category) {
+  onSelectCategory(category: Category) {
     this.selectedCategory = category;
     this.updateTasksAndStat();
   }
 
   // поиск категории
-  private onSearchCategory(title: string) {
+  onSearchCategory(title: string) {
     this.searchCategoryText = title;
     this.dataHandler.searchCategories(title).subscribe(categories => {
       this.categories = categories;
@@ -211,25 +211,25 @@ export class AppComponent {
   }
 
   // поиск задач
-  private onSearchTasks(searchString: string) {
+  onSearchTasks(searchString: string) {
     this.searchTaskText = searchString;
     this.updateTasks();
   }
 
   // фильтрация задач по статусу (все, решенные, нерешенные)
-  private onFilterTasksByStatus(status: boolean) {
+  onFilterTasksByStatus(status: boolean) {
     this.statusFilter = status;
     this.updateTasks();
   }
 
   // фильтрация задач по приоритетам
-  private onFilterTasksByPriority(priority: Priority) {
+  onFilterTasksByPriority(priority: Priority) {
     this.priorityFilter = priority;
     this.updateTasks();
   }
 
   // изменение списка задач
-  private updateTasks() {
+  updateTasks() {
     this.dataHandler.searchTasks(
       this.selectedCategory,
       this.searchTaskText,
@@ -241,14 +241,14 @@ export class AppComponent {
   }
 
   // показывает задачи с применением всех текущий условий (категория, поиск, фильтры и пр.)
-  private updateTasksAndStat() {
+  updateTasksAndStat() {
     this.updateTasks(); // обновить список задач
     // обновить переменные для статистики
     this.updateStat();
   }
 
   // обновить статистику
-  private updateStat() {
+  updateStat() {
     zip(
       this.dataHandler.getTotalCountInCategory(this.selectedCategory),
       this.dataHandler.getCompletedCountInCategory(this.selectedCategory),
@@ -264,17 +264,17 @@ export class AppComponent {
   }
 
   // показать-скрыть статистику
-  private toggleStat(showStat: boolean) {
+  toggleStat(showStat: boolean) {
     this.showStat = showStat;
   }
 
   // если закрыли меню любым способом - ставим значение false
-  private onClosedMenu() {
+  onClosedMenu() {
     this.menuOpened = false;
   }
 
   // настройки бокового меню для моб. и десктоп вариантов
-  private setMenuValues() {
+  setMenuValues() {
     this.menuPosition = 'left'; // меню слева
     if (this.isMobile) {
       this.menuOpened = false; // на моб. версии по-умолчанию меню будет закрыто
@@ -288,7 +288,7 @@ export class AppComponent {
   }
 
   // показать-скрыть меню
-  private toggleMenu() {
+  toggleMenu() {
     this.menuOpened = !this.menuOpened;
   }
 

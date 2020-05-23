@@ -28,7 +28,7 @@ export class PrioritiesComponent implements OnInit {
   @Output()
   addPriority = new EventEmitter<Priority>();
   @Input()
-  private priorities: [Priority];
+  priorities: [Priority];
 
   // -------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ export class PrioritiesComponent implements OnInit {
     });
   }
 
-  private onEditPriority(priority: Priority) {
+  onEditPriority(priority: Priority) {
     const dialogRef = this.dialog.open(EditPriorityDialogComponent, {
       data:
         [priority.title, 'Редактирование приоритета', OperType.EDIT],
@@ -74,7 +74,7 @@ export class PrioritiesComponent implements OnInit {
     });
   }
 
-  private onAddPriority() {
+  onAddPriority() {
     const dialogRef = this.dialog.open(EditPriorityDialogComponent, {
       data: ['', 'Добавление приоритета', OperType.ADD],
       width: '400px'

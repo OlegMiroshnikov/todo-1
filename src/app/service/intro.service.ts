@@ -8,11 +8,11 @@ import * as introJs from 'intro.js/intro';
 export class IntroService {
 
   // для сохранения в localStorage (хранилище браузера, нежелательно там хранить чувствительные данные)
-  private static INTRO_VIEWED_KEY = 'intro-viewed'; // ключ
-  private static INTRO_VIEWED_VALUE = 'done'; // значение
+  static INTRO_VIEWED_KEY = 'intro-viewed'; // ключ
+  static INTRO_VIEWED_VALUE = 'done'; // значение
 
 
-  private introJS = introJs(); // объект по работе с intro
+  introJS = introJs(); // объект по работе с intro
 
   constructor() {
   }
