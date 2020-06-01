@@ -9,6 +9,7 @@
 
 #templates
 /templates
+/lessons
 /browserslist
 
 # dependencies
@@ -48,4 +49,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# data bases
+/db
 

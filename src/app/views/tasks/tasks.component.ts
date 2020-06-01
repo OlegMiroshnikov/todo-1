@@ -12,7 +12,6 @@ import {Priority} from '../../model/Priority';
 import {OperType} from '../../dialog/OpenType';
 import {DeviceDetectorService} from 'ngx-device-detector';
 
-
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
