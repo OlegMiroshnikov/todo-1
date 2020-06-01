@@ -1,48 +1,34 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, InjectionToken} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {CommonService} from './CommonService';
+import {Category} from '../../../model/Category';
 import {CategoryDAO} from '../interface/CategoryDAO';
 import {CategorySearchValues} from '../search/SearchObjects';
-import {Category} from '../../../model/Category';
 
-// класс реализовывает методы доступа к данным с помощью RESTful запросов в формате JSON.
-// напоминает паттер Фасад (Facade) - выдает только то, что нужно для функционала UI
+// глобальная переменная для хранения URL
+export const CATEGORY_URL_TOKEN = new InjectionToken<string>('url');
+
+// класс реализовывает методы доступа к данным с помощью RESTful запросов в формате JSON
+// напоминает паттер Фасад (Facade) - выдает только то, что нужно для функционала
 
 // JSON формируется автоматически для параметров и результатов
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService implements CategoryDAO {
 
-  url = 'http://localhost:8080/category';
+// благодаря DAO и единому интерфейсу - мы можем вынести общую реализация в класс выше и избежать дублирования кода
+// классу остается только реализовать свои специфичные методы доступа к данным
+export class CategoryService extends CommonService<Category> implements CategoryDAO {
 
-  constructor(private httpClient: HttpClient // для выполнения HTTP запросов
+  constructor(@Inject(CATEGORY_URL_TOKEN) private baseUrl,
+              private http: HttpClient // для выполнения HTTP запросов
   ) {
+    super(baseUrl, http);
   }
 
   findCategories(categorySearchValues: CategorySearchValues) {
-    return this.httpClient.post<Category[]>(this.url + '/search', categorySearchValues);
-  }
-
-  add(t: Category): Observable<Category> {
-    return this.httpClient.post<Category>(this.url + '/add', t);
-  }
-
-  delete(id: number): Observable<Category> {
-    return this.httpClient.delete<Category>(this.url + '/delete/' + id);
-  }
-
-  findById(id: number): Observable<Category> {
-    return this.httpClient.get<Category>(this.url + '/id/' + id);
-  }
-
-  findAll(): Observable<Category[]> {
-    return this.httpClient.get<Category[]>(this.url + '/all');
-  }
-
-  update(t: Category): Observable<Category> {
-    return this.httpClient.put<Category>(this.url + '/update', t);
+    return this.http.post<Category[]>(this.baseUrl + '/search', categorySearchValues);
   }
 
 
