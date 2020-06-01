@@ -37,6 +37,7 @@ import {SettingsDialogComponent} from './dialog/settings-dialog/settings-dialog.
 import {EditPriorityDialogComponent} from './dialog/edit-priority-dialog/edit-priority-dialog.component';
 import {SidebarModule} from 'ng-sidebar';
 import {DeviceDetectorModule} from 'ngx-device-detector';
+import {HttpClientModule} from '@angular/common/http';
 
 registerLocaleData(localeRu);
 
@@ -77,7 +78,8 @@ registerLocaleData(localeRu);
     MatCheckboxModule,
     ColorPickerModule,
     SidebarModule,
-    DeviceDetectorModule.forRoot()
+    DeviceDetectorModule.forRoot(),
+    HttpClientModule
   ],
   providers: [],
   entryComponents: [

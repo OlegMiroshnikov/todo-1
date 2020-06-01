@@ -6,10 +6,10 @@ import {Observable} from 'rxjs';
 export interface CommonDAO<T> {
 
   // получить все значения
-  getAll(): Observable<T[]>;
+  findAll(): Observable<T[]>;
 
   // получить одно значение по id
-  get(id: number): Observable<T>; // получение значения по уникальному id
+  findById(id: number): Observable<T>; // получение значения по уникальному id
 
   // обновить значение
   update(obj: T): Observable<T>;
