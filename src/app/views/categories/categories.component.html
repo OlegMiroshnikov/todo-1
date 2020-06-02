@@ -44,34 +44,34 @@
         <a class="nav-link pointer">
           <span class="all-category-title">Все</span>
           <!--сколько невыполненных задач-->
-          <span class="uncompleted-count"> {{uncompletedTotal}}</span>
+          <span class="uncompleted-count"> {{uncompletedCountForCategoryAll || 0}}</span>
         </a>
       </li>
 
       <!-- разделитель-->
       <div class="line"></div>
 
-      <div *ngIf="categoryMap.size === 0"><p class="not-found">Ничего не найдено</p></div>
+      <div *ngIf="categories && categories.length === 0"><p class="not-found">Ничего не найдено</p></div>
 
       <!-- все конкретные категории-->
-      <li (click)="showTasksByCategory(mapValue.key)"
+      <li (click)="showTasksByCategory(category)"
           (mouseenter)="showEditIcon(index)"
           (mouseleave)="showEditIcon(null)"
-          *ngFor="let mapValue of categoryMap | keyvalue; let index = index"
-          [class.active]="mapValue.key === selectedCategory"
+          *ngFor="let category of categories; let index = index"
+          [class.active]="category === selectedCategory"
           class="nav-item pointer">
         <a class="nav-link">
           <!--          название категории-->
-          <span class="category-title">{{mapValue.key.title}}</span>
+          <span class="category-title">{{category.title}}</span>
           <!--         кнопка редактирования категории-->
           <span class="edit-category-icon-area">
             <mat-icon
-              (click)="$event.stopPropagation(); openEditDialog(mapValue.key)"
+              (click)="$event.stopPropagation(); openEditDialog(category)"
               *ngIf="indexMouseMove === index || isMobile || isTablet"
               class="edit-category-icon">edit</mat-icon>
           </span>
           <!--сколько невыполненных задач-->
-          <span class="uncompleted-count"> {{mapValue.value}}</span>
+          <span class="uncompleted-count"> {{category.uncompletedCount || 0}}</span>
         </a>
 
       </li>

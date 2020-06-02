@@ -12,11 +12,16 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 })
 export class CategoriesComponent implements OnInit {
 
-  @Input() categories: Category[];
+  categories: Category[];
+  @Input() uncompletedCountForCategoryAll: number;  // кол-во невыполненных задач всего
+
   @Input() selectedCategory: Category;
 
-  @Input() uncompletedTotal: number;  // кол-во невыполненных задач всего
-  categoryMap: Map<Category, number>; // список всех категорий и кол-во активных задач
+  @Input('categories')
+  set setCategories(categories: Category[]) {
+    this.categories = categories;
+    console.log(categories);
+  }
 
   @Output() selectCategory = new EventEmitter<Category>();
   @Output() updateCategory = new EventEmitter<Category>();
@@ -36,11 +41,6 @@ export class CategoriesComponent implements OnInit {
   ) {
     this.isMobile = deviceService.isMobile();
     this.isTablet = deviceService.isTablet();
-  }
-
-  @Input('categoryMap') // категории с кол-вом активных задач для каждой из них
-  set setCategoryMap(categoryMap: Map<Category, number>) {
-    this.categoryMap = categoryMap;
   }
 
   ngOnInit(): void {

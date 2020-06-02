@@ -6,6 +6,7 @@ import {zip} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {IntroService} from './service/intro.service';
+import {CategoryService} from './data/dao/impl/CategoryService';
 
 @Component({
   selector: 'app-root',
@@ -19,29 +20,16 @@ export class AppComponent {
   // коллекция категорий с кол-вом незавершенных задач для каждой из них
   categoryMap = new Map<Category, number>();
 
-  tasks: Task[];          // все задачи
   categories: Category[]; // все категории
-  priorities: Priority[]; // все приоритеты
 
   // выбранная категория
   selectedCategory: Category = null; // null - значит будет выбрана категория "Все"
 
   // статистика
-  totalTasksCountInCategory: number;
-  completedCountInCategory: number;
-  uncompletedCountInCategory: number;
-  uncompletedTotalTasksCount: number;
+  uncompletedCountForCategoryAll: number;
 
   // показать/скрыть статистику
   showStat = true;
-
-  // поиск
-  searchTaskText = ''; // текущее значение для поиска задач
-  searchCategoryText = ''; // текущее значение для поиска категорий
-
-  // фильтрация
-  priorityFilter: Priority;
-  statusFilter: boolean;
 
   // параметры бокового меню с категориями
   menuOpened: boolean; // открыть-закрыть
@@ -54,7 +42,7 @@ export class AppComponent {
   isTablet: boolean;
 
   constructor(
-    // private dataHandler: DataHandlerService, // фасад для работы с данными
+    private categoryService: CategoryService, //фасад для работы с данными
     private introService: IntroService, // вводная справоч. информация с выделением областей
     private deviceService: DeviceDetectorService // для определения типа устройства (моб., десктоп, планшет)
   ) {
@@ -69,8 +57,8 @@ export class AppComponent {
   ngOnInit(): void {
     // this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
     // this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
-    this.fillCategories();     // заполнить меню с категориями
-    this.onSelectCategory(null);
+    this.fillAllCategories();     // заполнить меню с категориями
+    this.selectCategory(null);
 
     // для мобильных и планшетов - не показывать интро
     if (!this.isMobile && !this.isTablet) {
@@ -85,19 +73,22 @@ export class AppComponent {
   // }
 
   // заполняет категории и кол-во невыполненных задач по каждой из них (нужно для отображения категорий)
-  fillCategories() {
-    if (this.categoryMap) {
-      this.categoryMap.clear();
-    }
-    this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
-    // для каждой категории посчитать кол-во невыполненных задач
-    this.categories.forEach(cat => {
-      // this.dataHandler.getUncompletedCountInCategory(cat).subscribe(count => this.categoryMap.set(cat, count));
+  fillAllCategories() {
+    this.categoryService.findAll().subscribe(result => {
+      this.categories = result;
     });
+    // if (this.categoryMap) {
+    //   this.categoryMap.clear();
+    // }
+    // this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
+    // // для каждой категории посчитать кол-во невыполненных задач
+    // this.categories.forEach(cat => {
+    //   this.dataHandler.getUncompletedCountInCategory(cat).subscribe(count => this.categoryMap.set(cat, count));
+    // });
   }
 
   // добавление категории
-  onAddCategory(title: string): void {
+  addCategory(title: string): void {
     // this.dataHandler.addCategory(title).subscribe(() => this.fillCategories());
   }
 
@@ -110,7 +101,7 @@ export class AppComponent {
   // }
 
   // удаление категории
-  onDeleteCategory(category: Category) {
+  deleteCategory(category: Category) {
     // this.dataHandler.deleteCategory(category.id).subscribe(cat => {
     //   this.selectedCategory = null; // открываем категорию "Все"
     //   this.categoryMap.delete(cat); // не забыть удалить категорию из карты
@@ -120,7 +111,7 @@ export class AppComponent {
   }
 
   // обновлении категории
-  onUpdateCategory(category: Category) {
+  updateCategory(category: Category) {
     // this.dataHandler.updateCategory(category).subscribe(() => {
     //   this.onSearchCategory(this.searchCategoryText);
     // });
@@ -183,13 +174,13 @@ export class AppComponent {
   }
 
   // выбор категории
-  onSelectCategory(category: Category) {
+  selectCategory(category: Category) {
     this.selectedCategory = category;
     this.updateTasksAndStat();
   }
 
   // поиск категории
-  onSearchCategory(title: string) {
+  searchCategory(title: string) {
     // this.searchCategoryText = title;
     // this.dataHandler.searchCategories(title).subscribe(categories => {
     //   this.categories = categories;
@@ -198,20 +189,20 @@ export class AppComponent {
 
   // поиск задач
   onSearchTasks(searchString: string) {
-    this.searchTaskText = searchString;
-    this.updateTasks();
+    // this.searchTaskText = searchString;
+    // this.updateTasks();
   }
 
   // фильтрация задач по статусу (все, решенные, нерешенные)
   onFilterTasksByStatus(status: boolean) {
-    this.statusFilter = status;
-    this.updateTasks();
+    // this.statusFilter = status;
+    // this.updateTasks();
   }
 
   // фильтрация задач по приоритетам
   onFilterTasksByPriority(priority: Priority) {
-    this.priorityFilter = priority;
-    this.updateTasks();
+    // this.priorityFilter = priority;
+    // this.updateTasks();
   }
 
   // изменение списка задач

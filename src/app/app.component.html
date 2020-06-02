@@ -18,17 +18,17 @@
          data-intro="Фильтрация задач, добавление/удаление/редактирование категорий"
          data-position='right'
          data-step="1">
-      <!--      <app-categories-->
-      <!--        (addCategory)="onAddCategory($event)"-->
-      <!--        (deleteCategory)="onDeleteCategory($event)"-->
-      <!--        (searchCategory)="onSearchCategory($event)"-->
-      <!--        (selectCategory)="onSelectCategory($event)"-->
-      <!--        (updateCategory)="onUpdateCategory($event)"-->
-      <!--        [categories]="categories"-->
-      <!--        [categoryMap]="categoryMap"-->
-      <!--        [selectedCategory]="selectedCategory"-->
-      <!--        [uncompletedTotal]="uncompletedTotalTasksCount">-->
-      <!--      </app-categories>-->
+      <app-categories
+        (addCategory)="addCategory($event)"
+        (deleteCategory)="deleteCategory($event)"
+        (searchCategory)="searchCategory($event)"
+        (selectCategory)="selectCategory($event)"
+        (updateCategory)="updateCategory($event)"
+
+        [categories]="categories"
+        [selectedCategory]="selectedCategory"
+        [uncompletedCountForCategoryAll]="uncompletedCountForCategoryAll">
+      </app-categories>
     </div>
   </ng-sidebar>
 
