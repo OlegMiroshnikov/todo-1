@@ -5,7 +5,7 @@
 
     <!--    иконка добавления новой категории -->
     <span class="add-icon-area">
-        <button (click)="openAddCategoryDialog()" class="add-icon" mat-icon-button><mat-icon>add</mat-icon>
+        <button (click)="openAddDialog()" class="add-icon" mat-icon-button><mat-icon>add</mat-icon>
         </button>
     </span>
   </div>
@@ -17,22 +17,26 @@
       <div class="search-category-area">
         <mat-form-field class="example-full-width">
           <input
-            #inputSearchCategory
-            (keydown.escape)="searchCategoryTitle = ''; search()"
-            (keyup)="search()"
-            [(ngModel)]="searchCategoryTitle"
             matInput
             maxlength="256"
             placeholder="Поиск категорий"
-          />
-
+            (keydown.escape)="clearAndSearch()"
+            (ngModelChange)="this.checkFilterChanged()"
+            [(ngModel)]="filterTitle"/>
           <button
-            (click)="searchCategoryTitle = ''; search()"
-            *ngIf="inputSearchCategory.value.trim().length > 0"
+            (click)="clearAndSearch()"
+            *ngIf="filterTitle && filterTitle.trim().length > 0" class="search-category-button" mat-button
             aria-label="Clear"
-            class="search-category-button size25 gray" mat-button mat-icon-button matSuffix
-          >
+            mat-icon-button
+            matSuffix>
             <mat-icon>clear</mat-icon>
+          </button>
+          <button
+            (click)="search()"
+            *ngIf="filterTitle && filterTitle.trim().length > 0" [ngClass]="{'blink-button': filterChanged}" mat-button
+            mat-icon-button
+            matSuffix>
+            <mat-icon>search</mat-icon>
           </button>
         </mat-form-field>
       </div>
@@ -55,11 +59,12 @@
 
       <!-- все конкретные категории-->
       <li (click)="showTasksByCategory(category)"
-          (mouseenter)="showEditIcon(index)"
-          (mouseleave)="showEditIcon(null)"
+          (mouseenter)="showEditIcon(true, index)"
+          (mouseleave)="showEditIcon(false, index)"
           *ngFor="let category of categories; let index = index"
           [class.active]="category === selectedCategory"
           class="nav-item pointer">
+
         <a class="nav-link">
           <!--          название категории-->
           <span class="category-title">{{category.title}}</span>
