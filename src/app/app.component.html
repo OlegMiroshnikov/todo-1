@@ -18,17 +18,17 @@
          data-intro="Фильтрация задач, добавление/удаление/редактирование категорий"
          data-position='right'
          data-step="1">
-      <app-categories
-        (addCategory)="onAddCategory($event)"
-        (deleteCategory)="onDeleteCategory($event)"
-        (searchCategory)="onSearchCategory($event)"
-        (selectCategory)="onSelectCategory($event)"
-        (updateCategory)="onUpdateCategory($event)"
-        [categories]="categories"
-        [categoryMap]="categoryMap"
-        [selectedCategory]="selectedCategory"
-        [uncompletedTotal]="uncompletedTotalTasksCount">
-      </app-categories>
+      <!--      <app-categories-->
+      <!--        (addCategory)="onAddCategory($event)"-->
+      <!--        (deleteCategory)="onDeleteCategory($event)"-->
+      <!--        (searchCategory)="onSearchCategory($event)"-->
+      <!--        (selectCategory)="onSelectCategory($event)"-->
+      <!--        (updateCategory)="onUpdateCategory($event)"-->
+      <!--        [categories]="categories"-->
+      <!--        [categoryMap]="categoryMap"-->
+      <!--        [selectedCategory]="selectedCategory"-->
+      <!--        [uncompletedTotal]="uncompletedTotalTasksCount">-->
+      <!--      </app-categories>-->
     </div>
   </ng-sidebar>
 
@@ -40,12 +40,12 @@
 
       <!-- header: навигация с шапкой и списком категорий-->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-        <app-header
-          (toggleMenu)="toggleMenu()"
-          (toggleStat)="toggleStat($event)"
-          [categoryName]="selectedCategory ? selectedCategory.title: 'Все'"
-          [showStat]="showStat">
-        </app-header>
+        <!--        <app-header-->
+        <!--          (toggleMenu)="toggleMenu()"-->
+        <!--          (toggleStat)="toggleStat($event)"-->
+        <!--          [categoryName]="selectedCategory ? selectedCategory.title: 'Все'"-->
+        <!--          [showStat]="showStat">-->
+        <!--        </app-header>-->
       </nav>
 
       <!--  список задач со статистикой-->
@@ -56,31 +56,31 @@
           <div data-intro="Список всех задач cо статистикой"
                data-position='top'
                data-step="2">
-            <app-stat
-              [completeTasksInCategory]="completedCountInCategory"
-              [showStat]="showStat"
-              [totalTasksInCategory]="totalTasksCountInCategory"
-              [uncompleteTasksInCategory]="uncompletedCountInCategory">
-            </app-stat>
+            <!--            <app-stat-->
+            <!--              [completeTasksInCategory]="completedCountInCategory"-->
+            <!--              [showStat]="showStat"-->
+            <!--              [totalTasksInCategory]="totalTasksCountInCategory"-->
+            <!--              [uncompleteTasksInCategory]="uncompletedCountInCategory">-->
+            <!--            </app-stat>-->
           </div>
 
           <!-- список задач-->
           <div class="row">
             <div class="col-12">
-              <app-tasks
-                (addTask)="onAddTask($event)"
-                (deleteTask)="onDeleteTask($event)"
-                (filterByPriority)="onFilterTasksByPriority($event)"
-                (filterByStatus)="onFilterTasksByStatus($event)"
+              <!--              <app-tasks-->
+              <!--                (addTask)="onAddTask($event)"-->
+              <!--                (deleteTask)="onDeleteTask($event)"-->
+              <!--                (filterByPriority)="onFilterTasksByPriority($event)"-->
+              <!--                (filterByStatus)="onFilterTasksByStatus($event)"-->
 
-                (filterByTitle)="onSearchTasks($event)"
-                (selectCategory)="onSelectCategory($event)"
-                (updateTask)="onUpdateTask($event)"
+              <!--                (filterByTitle)="onSearchTasks($event)"-->
+              <!--                (selectCategory)="onSelectCategory($event)"-->
+              <!--                (updateTask)="onUpdateTask($event)"-->
 
-                [priorities]="priorities"
-                [selectedCategory]="selectedCategory"
-                [tasks]="tasks">
-              </app-tasks>
+              <!--                [priorities]="priorities"-->
+              <!--                [selectedCategory]="selectedCategory"-->
+              <!--                [tasks]="tasks">-->
+              <!--              </app-tasks>-->
             </div>
           </div>
         </div>
