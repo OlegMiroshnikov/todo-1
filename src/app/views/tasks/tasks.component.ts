@@ -20,10 +20,15 @@ export class TasksComponent implements OnInit {
 
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   dataSource: MatTableDataSource<Task>;
-
-   tasks: Task[];
+  tasks: Task[];
 
   @Input() selectedCategory: Category;
+
+  @Input('tasks')
+  set setTasks(tasks: Task[]) {
+    this.tasks = tasks;
+    this.fillTable();
+  }
 
   @Input('priorities')
   set setPriorities(priorities: Priority[]) {
@@ -38,29 +43,23 @@ export class TasksComponent implements OnInit {
   @Output() selectCategory = new EventEmitter<Category>(); // нажали на категорию из списка задач
   @Output() addTask = new EventEmitter<Task>();
   priorities: Priority[]; // список приоритетов (для фильтрации задач)
+
+
   // поиск
   searchTaskText: string; // текущее значение для поиска задач
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
+
   selectedStatusFilter: boolean = null;   // по-умолчанию будут показываться задачи по всем статусам (решенные и нерешенные)
   selectedPriorityFilter: Priority = null;   // по-умолчанию будут показываться задачи по всем приоритетам
   isMobile: boolean;
-
-  @Input('tasks')
-  set setTasks(tasks: Task[]) {
-    this.tasks = tasks;
-    this.fillTable();
-  }
 
   constructor(
     private dialog: MatDialog,
     private deviceService: DeviceDetectorService // для определения типа устройства
   ) {
-
     this.isMobile = this.deviceService.isMobile();
-
   }
-
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource();

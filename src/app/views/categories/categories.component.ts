@@ -59,7 +59,14 @@ export class CategoriesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  showTasksByCategory(category: Category): void {
+  // выбираем категорию для отображения соотв. задач
+  showCategory(category: Category) {
+    // если не изменилось значение, ничего не делать (чтобы лишний раз не делать запрос данных)
+    if (this.selectedCategory === category) {
+      return;
+    }
+    this.selectedCategory = category; // сохраняем выбранную категорию
+    this.selectCategory.emit(this.selectedCategory); // вызываем внешний обработчик
   }
 
   // диалоговое окно для добавления категории

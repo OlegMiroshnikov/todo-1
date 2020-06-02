@@ -3,7 +3,9 @@ import {Category} from './model/Category';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {IntroService} from './service/intro.service';
 import {CategoryService} from './data/dao/impl/CategoryService';
-import {CategorySearchValues} from '../../lessons/7-frontend-springboot/src/app/data/dao/search/SearchObjects';
+import {TaskService} from './data/dao/impl/TaskService';
+import {CategorySearchValues, TaskSearchValues} from './data/dao/search/SearchObjects';
+import {Task} from '../../lessons/9-frontend-springboot/src/app/model/Task';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,8 @@ import {CategorySearchValues} from '../../lessons/7-frontend-springboot/src/app/
 // компонент-контейнер (Smart, Container), который управляет другими  компонентами (Dumb, Presentational)
 export class AppComponent implements OnInit {
 
-  categories: Category[]; // все категории
+  tasks: Task[]; // текущие задачи для отображения на странице
+  categories: Category[]; // все категории для отображения на странице
 
   // статистика
   uncompletedCountForCategoryAll: number;
@@ -37,10 +40,13 @@ export class AppComponent implements OnInit {
   isTablet: boolean;
 
   // параметры поисков
-  categorySearchValues = new CategorySearchValues(); // экземпляр можно создать тут же, т.к. не загружаем из cookies
+  // экземпляр можно создать тут же, т.к. не загружаем из cookies
+  categorySearchValues = new CategorySearchValues();
+  taskSearchValues = new TaskSearchValues();
 
   constructor(
     private categoryService: CategoryService,
+    private taskService: TaskService,
     private introService: IntroService, // вводная справоч. информация с выделением областей
     private deviceService: DeviceDetectorService // для определения типа устройства (моб., десктоп, планшет)
   ) {
@@ -111,13 +117,26 @@ export class AppComponent implements OnInit {
     });
   }
 
-
-  // изменение категории
-  selectCategory(category: Category): void {
-
-
+  // выбрали/изменили категорию
+  selectCategory(category: Category) {
+    this.selectedCategory = category; // запоминаем выбранную категорию
+    // для поиска задач по данной категории
+    this.taskSearchValues.categoryId = category ? category.id : null;
+    // обновить список задач согласно выбранной категории и другим параметрам поиска из taskSearchValues
+    this.searchTasks(this.taskSearchValues);
+    if (this.isMobile) {
+      this.menuOpened = false; // для мобильных - автоматически закрываем боковое меню
+    }
   }
 
+  // поиск задач
+  searchTasks(searchTaskValues: TaskSearchValues) {
+    this.taskSearchValues = searchTaskValues;
+    this.taskService.findTasks(this.taskSearchValues).subscribe(result => {
+      this.tasks = result.content; // массив задач
+      console.log(result);
+    });
+  }
 
   // если закрыли меню любым способом - ставим значение false
   onClosedMenu() {

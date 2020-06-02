@@ -68,7 +68,7 @@
           <!-- список задач-->
           <div class="row">
             <div class="col-12">
-              <!--              <app-tasks-->
+              <!--                            <app-tasks-->
               <!--                (addTask)="onAddTask($event)"-->
               <!--                (deleteTask)="onDeleteTask($event)"-->
               <!--                (filterByPriority)="onFilterTasksByPriority($event)"-->
@@ -79,9 +79,11 @@
               <!--                (updateTask)="onUpdateTask($event)"-->
 
               <!--                [priorities]="priorities"-->
-              <!--                [selectedCategory]="selectedCategory"-->
-              <!--                [tasks]="tasks">-->
-              <!--              </app-tasks>-->
+
+              <app-tasks
+                [selectedCategory]="selectedCategory"
+                [tasks]="tasks">
+              </app-tasks>
             </div>
           </div>
         </div>
