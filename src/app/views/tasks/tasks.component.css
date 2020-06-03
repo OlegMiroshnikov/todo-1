@@ -3,34 +3,46 @@
   color: #d6d6d6 !important;
   background-color: transparent !important;
 }
+
 .novalue {
   color: #b7b7b7;
 }
-.col-сolor {
-  width: 1% !important
-}
+
+
 .col-id {
   width: 4%;
   text-align: center;
 }
+
 .col-title {
-  width: 38%;
+  width: 40%;
 }
-.col-date {
-  width: 10% !important;
-}
+
 .col-priority {
   width: 10%;
 }
+
 .col-category {
   width: 10%;
 }
-.col-operations {
-  width: 10%;
-}
+
+
 .col-select {
   width: 3%;
 }
+
+.col-operations {
+  width: 10%;
+}
+
+.col-color {
+  width: 1% !important;
+}
+
+.col-date {
+  width: 10% !important;
+}
+
 .delete-icon {
   cursor: pointer;
   color: #ea6561;
@@ -38,6 +50,7 @@
   margin-left: 3px;
   margin-right: 3px;
 }
+
 .edit-icon {
   cursor: pointer;
   color: #9A9A9A;
@@ -52,6 +65,7 @@
   font-weight: normal;
 }
 
+
 .card-mobile {
   border-radius: 5px;
   margin-bottom: 10px;
@@ -61,6 +75,7 @@
 .background-completed {
   background-color: #94ada7 !important
 }
+
 
 .mobile-priority-top {
   height: 5px;
@@ -80,6 +95,7 @@
   padding-left: 15px;
   margin-left: 10px;
 }
+
 
 .mobile-category {
   float: left;
@@ -110,6 +126,7 @@
   border-radius: 4px;
 }
 
+
 .mobile-check {
   padding-top: 14px;
 }
@@ -124,12 +141,15 @@
   color: #8e8e8e;
 }
 
+
 .mobile-title {
   font-size: 16px;
   line-height: 20px;
   margin-top: 5px;
   margin-bottom: 10px;
+
 }
+
 
 .check-icon-notcompleted {
   font-size: 40px !important;
@@ -141,6 +161,7 @@
   color: rgba(167, 214, 182, 0.89);
 }
 
+
 .reset-search {
   margin-top: 10px;
   font-size: 16px;
@@ -148,6 +169,7 @@
   color: rgba(5, 83, 123, 0.98);
   text-align: center;
 }
+
 
 div.card-mobile p {
   margin-bottom: 0 !important;
@@ -164,7 +186,3 @@ div.card-mobile p {
 .nowidth {
   width: 100%;
 }
-
-
-
-
