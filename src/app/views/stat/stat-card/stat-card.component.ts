@@ -5,6 +5,7 @@ import {Component, Input, OnInit} from '@angular/core';
   templateUrl: './stat-card.component.html',
   styleUrls: ['./stat-card.component.css']
 })
+
 // "presentational component": отображает полученные данные
 // карточка для отображения статистики
 export class StatCardComponent implements OnInit {
@@ -16,10 +17,10 @@ export class StatCardComponent implements OnInit {
   iconName: string;
 
   @Input()
-  count1: any; // можно передавать любой тип для отображения (число, текст и пр.)
+  count1: any;
 
   @Input()
-  countTotal: any;
+  count2: any;
 
   @Input()
   title: string;

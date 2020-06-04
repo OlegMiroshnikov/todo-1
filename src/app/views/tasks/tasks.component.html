@@ -21,9 +21,9 @@
 
         (keydown.escape)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()"
 
-        (ngModelChange)="this.checkFilterChanged()"
-
         [(ngModel)]='filterTitle'
+
+        (ngModelChange)="this.checkFilterChanged()"
 
         placeholder="Название"
 
@@ -31,9 +31,9 @@
       >
 
       <button
-        (click)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()"
-
         *ngIf="filterTitle && filterTitle.trim().length > 0"
+
+        (click)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()"
 
         aria-label="Clear" class="clear-icon" mat-button
         mat-icon-button
@@ -58,8 +58,8 @@
         <mat-option [value]="0">Незавершенные задачи</mat-option>
       </mat-select>
       <button
-        (click)="$event.stopPropagation(); filterCompleted = null; checkFilterChanged()"
         *ngIf="filterCompleted != null"
+        (click)="$event.stopPropagation(); filterCompleted = null; checkFilterChanged()"
 
         aria-label="Clear" class="clear-icon" mat-button
         mat-icon-button
@@ -87,13 +87,13 @@
       </mat-select>
 
       <button
-        (click)="$event.stopPropagation(); filterPriorityId = null; checkFilterChanged() "
         *ngIf="filterPriorityId != null"
+        aria-label="Clear"
 
-        aria-label="Clear" class="clear-icon" mat-button
-        mat-icon-button
-
+        class="clear-icon" mat-button mat-icon-button
         matSuffix
+
+        (click)="$event.stopPropagation(); filterPriorityId = null; checkFilterChanged() "
 
       >
         <mat-icon>clear</mat-icon>
@@ -109,10 +109,10 @@
 
     <mat-form-field>
       <mat-select (selectionChange)="checkFilterChanged()"
-                  [(ngModel)]="filterSortColumn"
-
-
                   placeholder="Сортировка"
+
+
+                  [(ngModel)]="filterSortColumn"
 
       >
 
@@ -332,9 +332,9 @@
 
                 <mat-checkbox
 
-                  (change)="$event ? onToggleCompleted(task) : null"
-
                   (click)="$event.stopPropagation()"
+
+                  (change)="$event ? onToggleCompleted(task) : null"
 
                   [checked]="task.completed"
                 >

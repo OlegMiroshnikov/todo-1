@@ -1,38 +1,46 @@
-<div *ngIf="showStat">
+<div *ngIf="showStat" data-intro="Статистика выполнения задач в выбранной категории" data-position='bottom'
+     data-step="3">
   <div class="row">
 
+
     <app-stat-card
-      [completed]="true"
-      [count1]="completeTasksInCategory"
-      [countTotal]="totalTasksInCategory"
       class='col-lg-3 col-md-6 col-sm-6'
+      [completed]="true"
       iconName="done"
-      title="Завершенные задачи">
+      [count1]="getCompletedCount()"
+      [count2]="getTotal()"
+      title="Завершенные задачи"
+    >
     </app-stat-card>
 
     <app-stat-card
-      [count1]="uncompleteTasksInCategory"
-      [countTotal]="totalTasksInCategory"
       class='col-lg-3 col-md-6 col-sm-6'
+      [count1]="getUncompletedCount()"
       iconName="thumb_down_alt"
-      title="Незавершенные задачи">
+      [count2]="getTotal()"
+      title="Незавершенные задачи"
+    >
     </app-stat-card>
 
+
     <app-stat-card
-      [completed]="true"
-      [count1]="completeTasksInCategory ? (completeTasksInCategory/totalTasksInCategory | percent) : '0 %'"
       class='col-lg-3 col-md-6 col-sm-6 completed-card'
+      [completed]="true"
       iconName="poll"
-      title="Процент завершенных задач">
+      [count1]="getCompletedPercent() | percent"
+      title="% завершенных задач"
+
+    >
     </app-stat-card>
 
+
     <app-stat-card
-      [count1]="uncompleteTasksInCategory ? (uncompleteTasksInCategory/totalTasksInCategory | percent) : '0 %'"
       class='col-lg-3 col-md-6 col-sm-6'
+      [count1]="getUncompletedPercent() | percent"
       iconName="thumb_down_alt"
-      title="Процент незавершенных задач">
+      title="% незавершенных задач">
     </app-stat-card>
+
 
   </div>
 </div>
-
