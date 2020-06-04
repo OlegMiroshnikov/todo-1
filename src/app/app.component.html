@@ -1,4 +1,3 @@
-<div *ngIf="spinner && spinner.visibility | async" class="spinner"></div>
 
 <ng-sidebar-container> <!--контейнер для внедрения слайд-меню-->
 
@@ -63,11 +62,12 @@
 
         <!--     шапка с меню -->
         <app-header
-          (toggleMenu)="toggleMenu()"
-          (toggleStat)="toggleStat($event)"
-
           [categoryName]="selectedCategory ? selectedCategory.title: 'Все'"
           [showStat]="showStat"
+
+          (settingsChanged)="settingsChanged($event)"
+          (toggleMenu)="toggleMenu()"
+          (toggleStat)="toggleStat($event)"
 
         >
 
@@ -94,22 +94,22 @@
           <!--        список задач-->
           <app-tasks
 
-            (addTask)="addTask($event)"
-            (deleteTask)="deleteTask($event)"
-            (paging)="paging($event)"
             (searchAction)="searchTasks($event)"
             (selectCategory)="selectCategory($event)"
-            (toggleSearch)="toggleSearch($event)"
             (updateTask)="updateTask($event)"
-
-
             [categories]="categories"
             [priorities]="priorities"
             [selectedCategory]="selectedCategory"
             [showSearch]="showSearch"
+
+
             [taskSearchValues]="taskSearchValues"
             [tasks]="tasks"
+            (addTask)="addTask($event)"
+            (deleteTask)="deleteTask($event)"
             [totalTasksFounded]="totalTasksFounded"
+            (paging)="paging($event)"
+            (toggleSearch)="toggleSearch($event)"
 
 
           >

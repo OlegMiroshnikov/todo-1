@@ -1,50 +1,95 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Priority} from '../../model/Priority';
+import {PriorityService} from '../../data/dao/impl/PriorityService';
+import {DialogAction, DialogResult} from '../../object/DialogResult';
 
 @Component({
   selector: 'app-settings-dialog',
   templateUrl: './settings-dialog.component.html',
   styleUrls: ['./settings-dialog.component.css']
 })
+
 // диалоговое окно настроек приложения
 // т.к. настройки не привязаны к другим компонентам (окнам),
 // то он самостоятельно может загружать нужные данные с помощью dataHandler (а не получать их с помощью @Input)
 
 export class SettingsDialogComponent implements OnInit {
 
-   priorities: Priority[];
+  priorities: Priority[]; // список приоритетов для редактирования/удаления
+  settingsChanged = false; // были ли изменены настройки
 
   constructor(
     private dialogRef: MatDialogRef<SettingsDialogComponent>, // для возможности работы с текущим диалог. окном
+    private priorityService: PriorityService // ссылка на сервис для работы с данными
   ) {
   }
 
+
   ngOnInit() {
-    // получаем все значения, чтобы отобразить настроку цветов
-    // this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
+    // получаем все значения, чтобы отобразить настройку цветов
+    this.priorityService.findAll().subscribe(priorities => this.priorities = priorities);
   }
 
   // нажали Закрыть
-  onClose() {
-    this.dialogRef.close(false);
+  close(): void {
+
+    if (this.settingsChanged) { // если в настройках произошли изменения
+      this.dialogRef.close(new DialogResult(DialogAction.SETTINGS_CHANGE, this.priorities));
+    } else {
+      this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
+    }
   }
 
-  // т.к. мы меняем значения в массивах, то изменения сразу отражаются на списке задач (не требуется доп. обновления)
 
   // добавили приоритет
-  onAddPriority(priority: Priority): void {
-    // this.dataHandler.addPriority(priority).subscribe();
+  addPriority(priority: Priority): void {
+
+    this.settingsChanged = true; // в настройках произошли изменения
+
+    // сначала обновить в БД
+    this.priorityService.add(priority).subscribe(result => {
+      // т.к. данные простые и без сортировки - то можно просто добавить объект в локальный массив,
+      // а не запрашивать заново из БД
+      this.priorities.push(result);
+    });
   }
 
   // удалили приоритет
-  onDeletePriority(priority: Priority): void {
-    // this.dataHandler.deletePriority(priority.id).subscribe();
+  deletePriority(priority: Priority): void {
+
+    this.settingsChanged = true; // в настройках произошли изменения
+
+    // сначала обновить в БД
+    this.priorityService.delete(priority.id).subscribe(() => {
+
+        // т.к. данные простые и без сортировки - то можно просто удалить объект в локальном массиве,
+        // а не запрашивать заново из БД
+        this.priorities.splice(this.getPriorityIndex(priority), 1);
+      }
+    );
   }
 
-  //  изменили приоритет
-  onUpdatePriority(priority: Priority) {
-    // this.dataHandler.updatePriority(priority).subscribe();
+  // обновили приоритет
+  updatePriority(priority: Priority): void {
+
+    this.settingsChanged = true; // в настройках произошли изменения
+
+    // сначала обновить в БД
+    this.priorityService.update(priority).subscribe(() => {
+
+        // т.к. данные простые и без сортировки - то можно просто обновить объект в локальном массиве,
+        // а не запрашивать заново из БД
+        this.priorities[this.getPriorityIndex(priority)] = priority;
+      }
+    )
+    ;
+  }
+
+  // находит индекс элемента (по id) в локальном массиве
+  getPriorityIndex(priority: Priority): number {
+    const tmpPriority = this.priorities.find(t => t.id === priority.id);
+    return this.priorities.indexOf(tmpPriority);
   }
 
 }

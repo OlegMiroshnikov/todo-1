@@ -6,6 +6,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
   templateUrl: './about-dialog.component.html',
   styleUrls: ['./about-dialog.component.css']
 })
+
 // диалоговое окно-описание программы
 export class AboutDialogComponent implements OnInit {
 
@@ -21,11 +22,13 @@ export class AboutDialogComponent implements OnInit {
     this.message = data.message; // сообщение
   }
 
+
   ngOnInit() {
   }
 
+
   // нажали ОК
-  onConfirm(): void {
+  confirm(): void {
     this.dialogRef.close(true);
   }
 

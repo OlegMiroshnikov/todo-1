@@ -1,32 +1,38 @@
-<div class="container-fluid">
-  <div class="row settings col-12">
+<div class="container-fluid settings">
 
-    <!--  выбранная категория и переключение на показ статистики-->
-    <div class="col-10 text-left align-self-top">
 
-      <!--  sidebar меню      -->
-      <button (click)="onToggleMenu()" mat-icon-button type="button">
-        <mat-icon>menu</mat-icon>
-      </button>
+  <!--  кнопка открытия-закрытия меню-->
+  <div class="col-8 text-left align-self-top">
 
-      <p class="navbar-brand">{{categoryName}}</p>
-      <p (click)="onToggleStat()" *ngIf="showStat && !isMobile" class="link navbar-brand">Скрыть статистику</p>
-      <p (click)="onToggleStat()" *ngIf="!showStat && !isMobile" class="link navbar-brand">Показать статистику </p>
-    </div>
+    <button (click)="onToggleMenu()" mat-icon-button type="button">
 
-    <!--  помощь, настройки-->
-    <div class="col-2 text-right align-self-top">
-      <button class="header-icon" mat-icon-button>
-        <button (click)="showSettings()" class="header-icon" mat-icon-button>
-          <mat-icon>settings</mat-icon>
-        </button>
-      </button>
+      <mat-icon>menu</mat-icon>
 
-      <button (click)="showIntroHelp()" *ngIf="!isMobile" class="header-icon" mat-icon-button>
-        <mat-icon>help</mat-icon>
-      </button>
+    </button>
 
-    </div>
+
+    <p (click)="onToggleStat()" *ngIf="showStat && !isMobile" class="link navbar-brand">Скрыть статистику</p>
+    <p (click)="onToggleStat()" *ngIf="!showStat && !isMobile" class="link navbar-brand">Показать
+      статистику </p>
+    <p class="navbar-brand"><span *ngIf="!isMobile">Категория:</span> "{{categoryName}}"</p>
+
+  </div>
+
+
+  <!--  помощь, настройки-->
+  <div class="col-4 text-right align-self-top">
+
+    <button (click)="showSettings()" class="header-icon" mat-icon-button>
+      <mat-icon>settings</mat-icon>
+    </button>
+
+    <button (click)="showIntroHelp()" *ngIf="!isMobile" class="header-icon" mat-icon-button>
+      <mat-icon>help</mat-icon>
+    </button>
+
+
   </div>
 </div>
+
+
 

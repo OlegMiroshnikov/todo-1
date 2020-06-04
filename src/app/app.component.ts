@@ -61,8 +61,8 @@ export class AppComponent implements OnInit {
   totalTasksFounded: number; // сколько всего найдено данных
 
   // параметры поисков
-  taskSearchValues = new TaskSearchValues();
-  categorySearchValues = new CategorySearchValues();
+  taskSearchValues = new TaskSearchValues(); // экземпляр создаем позже, когда подгрузим данные из cookies
+  categorySearchValues = new CategorySearchValues(); // экземпляр можно создать тут же, т.к. не загружаем из cookies
 
 
   constructor(
@@ -87,8 +87,9 @@ export class AppComponent implements OnInit {
       this.fillAllCategories().subscribe(res => {
         this.categories = res;
 
+
         // первоначальное отображение задач при загрузке приложения
-        // запускаем только после выполнения статистики (т.к. понадобятся ее данные) и загруженных категорий
+        // запускаем толко после выполнения статистики (т.к. понадобятся ее данные) и загруженных категорий
         this.selectCategory(this.selectedCategory);
 
       });
@@ -121,6 +122,7 @@ export class AppComponent implements OnInit {
 
 
   }
+
 
 
   // заполняет массив приоритетов
@@ -225,6 +227,8 @@ export class AppComponent implements OnInit {
 
   toggleSearch(showSearch: boolean) {
     this.showSearch = showSearch;
+
+
   }
 
   // поиск задач
@@ -298,10 +302,13 @@ export class AppComponent implements OnInit {
       if (task.category) { // если в новой задаче была указана категория
         this.updateCategoryCounter(task.category); // обновляем счетчик для указанной категории
       }
+
       this.updateOverallCounter(); // обновляем всю статистику (в том числе счетчик для категории "Все")
+
       this.searchTasks(this.taskSearchValues); // обновляем список задач
 
     });
+
 
   }
 
@@ -319,6 +326,7 @@ export class AppComponent implements OnInit {
       }
 
       this.updateOverallCounter(); // обновляем всю статистику (в том числе счетчик для категории "Все")
+
       this.searchTasks(this.taskSearchValues); // обновляем список задач
 
     });
@@ -397,6 +405,14 @@ export class AppComponent implements OnInit {
     this.taskSearchValues.pageNumber = pageEvent.pageIndex;
 
     this.searchTasks(this.taskSearchValues); // показываем новые данные
+  }
+
+
+  // были ли изменены настройки приложения
+  settingsChanged(priorities: Priority[]) {
+    // this.fillAllPriorities(); // заново загрузить все категории из БД (чтобы их можно было сразу использовать в задачах)
+    this.priorities = priorities; // получаем измененные массив с приоритетами
+    this.searchTasks(this.taskSearchValues); // обновить текущие задачи и категории для отображения
   }
 
 

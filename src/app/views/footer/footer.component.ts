@@ -30,7 +30,7 @@ export class FooterComponent implements OnInit {
         autoFocus: false,
         data: {
           dialogTitle: 'О программе',
-          message: 'Данное приложение было создано для видеокурса "Angular для начинающих" на сайте javabegin.ru'
+          message: 'Данное приложение было создано для видеокурса "Angular+Java/SprigBoot" на сайте javabegin.ru'
         },
         width: '400px'
       });
