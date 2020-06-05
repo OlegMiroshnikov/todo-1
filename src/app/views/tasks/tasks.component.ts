@@ -143,7 +143,6 @@ export class TaskListComponent implements OnInit {
   ngOnInit() {
   }
 
-
   // передать данные таблице для отображения задач
   assignTableSource() {
 
