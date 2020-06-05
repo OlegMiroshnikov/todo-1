@@ -37,11 +37,12 @@ import {SettingsDialogComponent} from './dialog/settings-dialog/settings-dialog.
 import {EditPriorityDialogComponent} from './dialog/edit-priority-dialog/edit-priority-dialog.component';
 import {SidebarModule} from 'ng-sidebar';
 import {DeviceDetectorModule} from 'ngx-device-detector';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {TASK_URL_TOKEN} from './data/dao/impl/TaskService';
 import {CATEGORY_URL_TOKEN} from './data/dao/impl/CategoryService';
 import {PRIORITY_URL_TOKEN} from './data/dao/impl/PriorityService';
 import {STAT_URL_TOKEN} from './data/dao/impl/StatService';
+import {CustomHttpInterceptor} from './interceptor/http-interceptor';
 
 registerLocaleData(localeRu);
 
@@ -86,6 +87,11 @@ registerLocaleData(localeRu);
     HttpClientModule
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS, // все HTTP запросы будут выполняться с отображением индикатора загрузки
+      useClass: CustomHttpInterceptor,
+      multi: true
+    },
     {
       provide: TASK_URL_TOKEN,
       useValue: 'http://localhost:8080/task'

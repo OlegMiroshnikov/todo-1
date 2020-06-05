@@ -15,6 +15,7 @@ import {Stat} from './model/Stat';
 import {DashboardData} from './object/DashboardData';
 import {StatService} from './data/dao/impl/StatService';
 import {CookiesUtils} from './utils/CookiesUtils';
+import {SpinnerService} from './service/spinner.service';
 
 @Component({
   selector: 'app-root',
@@ -67,6 +68,9 @@ export class AppComponent implements OnInit {
 
   cookiesUtils = new CookiesUtils(); // утилита для работы с cookies
 
+  spinner: SpinnerService; // индикатор загрузки
+
+
   // названия cookies
   readonly cookieTaskSeachValues = 'todo:searchValues'; // для сохранения параметров поиска в формате JSON
   readonly cookieShowStat = 'todo:showStat'; // показывать или нет статистику
@@ -81,8 +85,11 @@ export class AppComponent implements OnInit {
     private statService: StatService,
     private dialog: MatDialog, // работа с диалог. окнами
     private introService: IntroService, // вводная справоч. информация с выделением областей
-    private deviceService: DeviceDetectorService // для определения типа устройства (моб., десктоп, планшет)
+    private deviceService: DeviceDetectorService, // для определения типа устройства (моб., десктоп, планшет)
+    private spinnerService: SpinnerService // индикатор загрузки в центре экрана (при каждом HTTP запросе)
   ) {
+
+    this.spinner = spinnerService;
 
 
     // не рекомендуется вкладывать subscribe друг в друга,
@@ -106,16 +113,16 @@ export class AppComponent implements OnInit {
           this.taskSearchValues.pageNumber = this.defaultPageNumber; // обязательный параметр, не должен быть пустым
         }
 
-        if (this.isMobile) { // если мобильное устройство, то не показывать статистику
+        if (this.isMobile) { // ��� ��������� ������ ������� �� ���������� ����������
           this.showStat = false;
         } else {
-          this.initShowStatCookie();
+          this.initShowStatCookie(); // ��� - ���������� ��� ��� ����� ���������� ������
         }
 
         this.initShowSearchCookie(); // кук - показывать или нет инструменты поиска
 
         // первоначальное отображение задач при загрузке приложения
-        // запускаем только после выполнения статистики (т.к. понадобятся ее данные) и загруженных категорий
+        // запускаем толко после выполнения статистики (т.к. понадобятся ее данные) и загруженных категорий
         this.selectCategory(this.selectedCategory);
 
       });
@@ -285,7 +292,6 @@ export class AppComponent implements OnInit {
 
     // сохраняем в cookies текущее значение
     this.cookiesUtils.setCookie(this.cookieTaskSeachValues, JSON.stringify(this.taskSearchValues));
-
 
     this.taskService.findTasks(this.taskSearchValues).subscribe(result => {
 

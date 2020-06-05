@@ -1,3 +1,5 @@
+<div *ngIf="spinner && spinner.visibility | async" class="spinner"></div>
+
 
 <ng-sidebar-container> <!--контейнер для внедрения слайд-меню-->
 
@@ -65,9 +67,9 @@
           [categoryName]="selectedCategory ? selectedCategory.title: 'Все'"
           [showStat]="showStat"
 
-          (settingsChanged)="settingsChanged($event)"
           (toggleMenu)="toggleMenu()"
           (toggleStat)="toggleStat($event)"
+          (settingsChanged)="settingsChanged($event)"
 
         >
 
