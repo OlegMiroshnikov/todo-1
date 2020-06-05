@@ -5,7 +5,6 @@
 @import "~intro.js/minified/introjs.min.css";
 
 
-
 html, body {
   height: 100%;
 }
@@ -303,3 +302,7 @@ app-header {
   cursor: pointer;
 }
 
+.transparent {
+  background: none;
+  border: none;
+}

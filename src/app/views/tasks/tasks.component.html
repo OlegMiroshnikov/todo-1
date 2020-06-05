@@ -33,12 +33,12 @@
       <button
         *ngIf="filterTitle && filterTitle.trim().length > 0"
 
-        (click)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()"
+        aria-label="Clear"
 
-        aria-label="Clear" class="clear-icon" mat-button
-        mat-icon-button
-
+        class="clear-icon" mat-button mat-icon-button
         matSuffix
+
+        (click)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()"
       >
         <mat-icon>clear</mat-icon>
       </button>
@@ -59,12 +59,12 @@
       </mat-select>
       <button
         *ngIf="filterCompleted != null"
-        (click)="$event.stopPropagation(); filterCompleted = null; checkFilterChanged()"
+        aria-label="Clear"
 
-        aria-label="Clear" class="clear-icon" mat-button
-        mat-icon-button
-
+        class="clear-icon" mat-button mat-icon-button
         matSuffix
+
+        (click)="$event.stopPropagation(); filterCompleted = null; checkFilterChanged()"
 
       >
         <mat-icon>clear</mat-icon>
@@ -88,10 +88,10 @@
 
       <button
         *ngIf="filterPriorityId != null"
-        aria-label="Clear"
+        class="clear-icon"
 
-        class="clear-icon" mat-button mat-icon-button
-        matSuffix
+        mat-button mat-icon-button matSuffix
+        aria-label="Clear"
 
         (click)="$event.stopPropagation(); filterPriorityId = null; checkFilterChanged() "
 
@@ -447,6 +447,10 @@
 
         </div>
       </div>
+
+      <mat-paginator (page)="pageChanged($event)" [length]="totalTasksFounded" [ngClass]="{'transparent':true}"
+                     [pageIndex]="taskSearchValues.pageNumber" [pageSizeOptions]="[5, 10, 20, 50, 100]"
+                     [pageSize]="taskSearchValues.pageSize" showFirstLastButtons></mat-paginator>
 
 
     </div>

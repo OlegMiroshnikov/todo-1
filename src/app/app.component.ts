@@ -14,6 +14,7 @@ import {PriorityService} from './data/dao/impl/PriorityService';
 import {Stat} from './model/Stat';
 import {DashboardData} from './object/DashboardData';
 import {StatService} from './data/dao/impl/StatService';
+import {CookiesUtils} from './utils/CookiesUtils';
 
 @Component({
   selector: 'app-root',
@@ -61,8 +62,15 @@ export class AppComponent implements OnInit {
   totalTasksFounded: number; // сколько всего найдено данных
 
   // параметры поисков
-  taskSearchValues = new TaskSearchValues(); // экземпляр создаем позже, когда подгрузим данные из cookies
+  taskSearchValues: TaskSearchValues; // экземпляр создаем позже, когда подгрузим данные из cookies
   categorySearchValues = new CategorySearchValues(); // экземпляр можно создать тут же, т.к. не загружаем из cookies
+
+  cookiesUtils = new CookiesUtils(); // утилита для работы с cookies
+
+  // названия cookies
+  readonly cookieTaskSeachValues = 'todo:searchValues'; // для сохранения параметров поиска в формате JSON
+  readonly cookieShowStat = 'todo:showStat'; // показывать или нет статистику
+  readonly cookieShowSearch = 'todo:showSearch'; // показывать или нет инструменты поиска
 
 
   constructor(
@@ -76,6 +84,7 @@ export class AppComponent implements OnInit {
     private deviceService: DeviceDetectorService // для определения типа устройства (моб., десктоп, планшет)
   ) {
 
+
     // не рекомендуется вкладывать subscribe друг в друга,
     // но чтобы не усложнять код цепочками rxjs - сделал попроще (можете переделать)
 
@@ -88,8 +97,25 @@ export class AppComponent implements OnInit {
         this.categories = res;
 
 
+        if (!this.initSearchCookie()) { // загружаем все куки, чтоыб восстановить состояние приложения
+
+          // устанавливаем значения по-умолчанию для этих 2-х обяз. параметров, чтобы запрос в БД отбработал корректно (иначе будет ошибка)
+          // остальные параметры могут быть null
+          this.taskSearchValues = new TaskSearchValues();
+          this.taskSearchValues.pageSize = this.defaultPageSize; // обязательный параметр, не должен быть пустым
+          this.taskSearchValues.pageNumber = this.defaultPageNumber; // обязательный параметр, не должен быть пустым
+        }
+
+        if (this.isMobile) { // если мобильное устройство, то не показывать статистику
+          this.showStat = false;
+        } else {
+          this.initShowStatCookie();
+        }
+
+        this.initShowSearchCookie(); // кук - показывать или нет инструменты поиска
+
         // первоначальное отображение задач при загрузке приложения
-        // запускаем толко после выполнения статистики (т.к. понадобятся ее данные) и загруженных категорий
+        // запускаем только после выполнения статистики (т.к. понадобятся ее данные) и загруженных категорий
         this.selectCategory(this.selectedCategory);
 
       });
@@ -124,6 +150,24 @@ export class AppComponent implements OnInit {
   }
 
 
+  // кук - показать поиск или нет
+  initShowSearchCookie() {
+    const val = this.cookiesUtils.getCookie(this.cookieShowSearch);
+    if (val) { // если кук найден
+      this.showSearch = (val === 'true'); // конвертация из string в boolean
+    }
+
+  }
+
+  // кук - показать статистику или нет
+  initShowStatCookie() {
+    if (!this.isMobile) { // если моб. устройство, то не показывать статистику
+      const val = this.cookiesUtils.getCookie(this.cookieShowStat);
+      if (val) { // если кук найден
+        this.showStat = (val === 'true'); // конвертация из string в boolean
+      }
+    }
+  }
 
   // заполняет массив приоритетов
   fillAllPriorities() {
@@ -220,6 +264,8 @@ export class AppComponent implements OnInit {
   toggleStat(showStat: boolean) {
     this.showStat = showStat;
 
+    // сохраняем в cookies текущее значение
+    this.cookiesUtils.setCookie(this.cookieShowStat, String(showStat));
   }
 
 
@@ -228,7 +274,8 @@ export class AppComponent implements OnInit {
   toggleSearch(showSearch: boolean) {
     this.showSearch = showSearch;
 
-
+    // сохраняем в cookies текущее значение
+    this.cookiesUtils.setCookie(this.cookieShowSearch, String(showSearch));
   }
 
   // поиск задач
@@ -236,12 +283,15 @@ export class AppComponent implements OnInit {
 
     this.taskSearchValues = searchTaskValues;
 
+    // сохраняем в cookies текущее значение
+    this.cookiesUtils.setCookie(this.cookieTaskSeachValues, JSON.stringify(this.taskSearchValues));
+
 
     this.taskService.findTasks(this.taskSearchValues).subscribe(result => {
 
       // Если выбранная страница для отображения больше, чем всего страниц - заново делаем поиск и показываем 1ю страницу.
       // Если пользователь был например на 2й странице общего списка и выполнил новый поиск, в результате которого доступна только 1 страница,
-      // то нужно вызвать поиск заново с показом 1й страницы (индекс 0)
+      // то нужно показать 1ю страницу (индекс 0)
       if (result.totalPages > 0 && this.taskSearchValues.pageNumber >= result.totalPages) {
         this.taskSearchValues.pageNumber = 0;
         this.searchTasks(this.taskSearchValues);
@@ -413,6 +463,84 @@ export class AppComponent implements OnInit {
     // this.fillAllPriorities(); // заново загрузить все категории из БД (чтобы их можно было сразу использовать в задачах)
     this.priorities = priorities; // получаем измененные массив с приоритетами
     this.searchTasks(this.taskSearchValues); // обновить текущие задачи и категории для отображения
+  }
+
+
+  // найти из cookies все параметры поиска, чтобы восстановить все окно
+  initSearchCookie(): boolean {
+
+    const cookie = this.cookiesUtils.getCookie(this.cookieTaskSeachValues);
+
+
+    if (!cookie) {
+      return false; // кук не был найден
+    }
+
+    const cookieJSON = JSON.parse(cookie);
+
+    if (!cookieJSON) {
+      return false; // кук был сохранен не в формате JSON
+    }
+
+    // важно тут создавать новый экземпляр, чтобы Change Detector в tasks.component увидел, что ссылка изменилась,
+    // и обновил свои данные.
+    // сделано для упрощения
+
+
+    if (!this.taskSearchValues) {
+      this.taskSearchValues = new TaskSearchValues();
+    }
+
+    // размер страницы
+    const tmpPageSize = cookieJSON.pageSize;
+    if (tmpPageSize) {
+      this.taskSearchValues.pageSize = Number(tmpPageSize); // конвертируем строку в число
+    }
+
+
+    // выбранная категория
+    const tmpCategoryId = cookieJSON.categoryId;
+    if (tmpCategoryId) {
+      this.taskSearchValues.categoryId = Number(tmpCategoryId);
+      this.selectedCategory = this.getCategoryFromArray(tmpCategoryId);
+    }
+
+    // выбранный приоритет
+    const tmpPriorityId = cookieJSON.priorityId;
+    if (tmpPriorityId) {
+      this.taskSearchValues.priorityId = Number(tmpPriorityId);
+    }
+
+    // текст поиска
+    const tmpTitle = cookieJSON.title;
+    if (tmpTitle) {
+      this.taskSearchValues.title = tmpTitle;
+    }
+
+
+    // статус задачи
+    const tmpCompleted = cookieJSON.completed;
+    if (tmpCompleted) {
+      this.taskSearchValues.completed = tmpCompleted;
+    }
+
+    // столбец сортировки
+    const tmpSortColumn = cookieJSON.sortColumn;
+    if (tmpSortColumn) {
+      this.taskSearchValues.sortColumn = tmpSortColumn;
+    }
+
+    // направление сортировки
+    const tmpSortDirection = cookieJSON.sortDirection;
+    if (tmpSortDirection) {
+      this.taskSearchValues.sortDirection = tmpSortDirection;
+    }
+
+
+    // номер страницы можно не сохранять/восстанавливать
+    // также можно не сохранять параметры поиска категорий, чтобы при восстановлении приложения показывались все категории
+
+    return true; // кук был найден и загружен
   }
 
 

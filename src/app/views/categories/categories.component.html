@@ -34,8 +34,8 @@
             maxlength="256"
             placeholder="Поиск категорий"
 
-            (ngModelChange)="this.checkFilterChanged()"
             [(ngModel)]="filterTitle"
+            (ngModelChange)="this.checkFilterChanged()"
 
 
             (keydown.escape)="clearAndSearch()"
@@ -96,16 +96,16 @@
       <!--      список категорий-->
       <li
 
-        (click)="showCategory(category)"
-
-
-        (mouseenter)="showEditIcon(true, index)"
-
-
-        (mouseleave)="showEditIcon(false, index)"
         *ngFor="let category of categories, let index = index"
 
+
         [class.active]="(selectedCategory && category) && category.id === selectedCategory.id"
+
+
+        (click)="showCategory(category)"
+        (mouseenter)="showEditIcon(true, index)"
+
+        (mouseleave)="showEditIcon(false, index)"
 
 
         class="nav-item category"

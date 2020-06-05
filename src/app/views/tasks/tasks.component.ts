@@ -37,8 +37,6 @@ export class TaskListComponent implements OnInit {
   @Input()
   showSearch: boolean; // показать/скрыть инструменты поиска
 
-  categories: Category[]; // список категорий
-
   // задачи для отображения на странице
   @Input('tasks')
   set setTasks(tasks: Task[]) {
@@ -59,6 +57,8 @@ export class TaskListComponent implements OnInit {
   set setPriorities(priorities: Priority[]) {
     this.priorities = priorities;
   }
+
+  categories: Category[]; // список категорий
 
 
   // ----------------------- исходящие действия----------------------------
